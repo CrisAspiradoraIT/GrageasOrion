@@ -232,7 +232,7 @@
 
       // Mensaje bonito
       let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
-      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n";
+      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
       let premiosPorGragea = [];
       for (let i = 1; i <= cuantas; i++) {
         let trio = [];
@@ -243,11 +243,11 @@
         }
         premiosPorGragea.push(trio);
       }
-      premiosPorGragea.forEach(trio => {
+      premiosPorGragea.forEach((trio, idx) => {
+        msg += `Gragea ${idx + 1}\n`;
         trio.forEach(par => {
-          msg += `${par.sabor} ⟶ ${par.premio}\n`;
+          msg += `${par.sabor} ⟶ ${par.premio}\n\n`;
         });
-        msg += `\n`;
       });
       msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
 
