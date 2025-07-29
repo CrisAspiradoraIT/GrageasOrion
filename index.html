@@ -52,24 +52,45 @@
       color: #a84a24;
       font-weight: bold;
     }
+    .gragea-container { display: none; }
+    .gragea-container.active { display: block; }
+    .gragea-selector {
+      margin-bottom: 2em;
+      font-size: 1.1em;
+    }
+    .gragea-selector label {
+      font-weight: normal;
+      margin-right: 1em;
+    }
   </style>
 </head>
 <body>
   <h1>Apertura de Grageas</h1>
+  
+  <div class="gragea-selector">
+    <label>¿Cuántas grageas quieres abrir?
+      <select id="grageaCount">
+        <option value="1">1 gragea</option>
+        <option value="2">2 grageas</option>
+        <option value="3" selected>3 grageas</option>
+      </select>
+    </label>
+  </div>
+  
   <form id="grageasForm">
-    <div class="gragea-container">
+    <div class="gragea-container" id="gragea-box-1">
       <label>Gragea 1:</label>
       <select name="gragea1-sabor1" required></select>
       <select name="gragea1-sabor2" required></select>
       <select name="gragea1-sabor3" required></select>
     </div>
-    <div class="gragea-container">
+    <div class="gragea-container" id="gragea-box-2">
       <label>Gragea 2:</label>
       <select name="gragea2-sabor1" required></select>
       <select name="gragea2-sabor2" required></select>
       <select name="gragea2-sabor3" required></select>
     </div>
-    <div class="gragea-container">
+    <div class="gragea-container" id="gragea-box-3">
       <label>Gragea 3:</label>
       <select name="gragea3-sabor1" required></select>
       <select name="gragea3-sabor2" required></select>
@@ -132,6 +153,28 @@
       });
     });
 
+    // Mostrar sólo los campos de las grageas elegidas
+    function actualizarGrageas() {
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById('gragea-box-' + i);
+        if (i <= cuantas) {
+          box.classList.add('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = true);
+        } else {
+          box.classList.remove('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = false);
+        }
+      }
+      // Limpiar resultado al cambiar cantidad
+      document.getElementById('result').style.display = 'none';
+    }
+
+    document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
+
+    // Mostrar inicial según el default
+    actualizarGrageas();
+
     // Función para obtener premio aleatorio
     function premioAleatorio() {
       return premios[Math.floor(Math.random() * premios.length)];
@@ -140,8 +183,9 @@
     // Al hacer submit, muestra el resultado con premios aleatorios
     document.getElementById('grageasForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
       let resultado = "";
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= cuantas; i++) {
         resultado += `<strong>Gragea ${i}:</strong><br>`;
         for (let j = 1; j <= 3; j++) {
           let sabor = this[`gragea${i}-sabor${j}`].value;
