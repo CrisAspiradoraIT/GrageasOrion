@@ -233,15 +233,22 @@
       // Mensaje bonito
       let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
       msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n";
+      let premiosPorGragea = [];
       for (let i = 1; i <= cuantas; i++) {
-        msg += `${i}\n`;
+        let trio = [];
         for (let j = 1; j <= 3; j++) {
           const sabor = this[`gragea${i}-sabor${j}`].value;
-          msg += `→ ${sabor}\n`;
+          const premio = premioAleatorio();
+          trio.push({sabor, premio});
         }
-        msg += '\n';
+        premiosPorGragea.push(trio);
       }
-      msg += '@⁨\n';
+      premiosPorGragea.forEach(trio => {
+        trio.forEach(par => {
+          msg += `${par.sabor} ⟶ ${par.premio}\n`;
+        });
+        msg += `\n`;
+      });
       msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
 
       document.getElementById('msgContent').innerText = msg;
@@ -249,15 +256,13 @@
 
       // Resultados con premios
       let resultado = "";
-      for (let i = 1; i <= cuantas; i++) {
-        resultado += `<strong>Gragea ${i}:</strong><br>`;
-        for (let j = 1; j <= 3; j++) {
-          let sabor = this[`gragea${i}-sabor${j}`].value;
-          let premio = premioAleatorio();
-          resultado += `${sabor} <br><span class="premio">Premio: ${premio}</span><br>`;
-        }
+      premiosPorGragea.forEach((trio, i) => {
+        resultado += `<strong>Gragea ${i+1}:</strong><br>`;
+        trio.forEach(par => {
+          resultado += `${par.sabor} <br><span class="premio">Premio: ${par.premio}</span><br>`;
+        });
         resultado += "<br>";
-      }
+      });
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = resultado;
       resultDiv.style.display = 'block';
