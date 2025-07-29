@@ -5,53 +5,78 @@
   <title>Apertura de Grageas</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f6ef;
-      color: #222;
+      min-height: 100vh;
+      font-family: 'Merriweather', serif;
+      background-color: #18263a;
+      background-image: url('https://www.transparenttextures.com/patterns/brick-wall.png');
+      /* Brick wall texture, puedes buscar otra si prefieres */
+      color: #f4e7d0;
       padding: 2em;
+      position: relative;
+      box-sizing: border-box;
     }
     h1 {
-      color: #854442;
+      color: #ffe082;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 8px #000, 0 0 16px #ffe08299;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+      margin-top: 60px;
     }
     .gragea-container {
-      border: 2px solid #854442;
+      border: 2px solid #ffe082;
       border-radius: 10px;
-      background: #fff;
+      background: rgba(20, 24, 40, 0.98);
       padding: 1em 2em;
       margin-bottom: 1.5em;
       max-width: 400px;
-      box-shadow: 2px 2px 14px #baafa7;
+      box-shadow: 2px 2px 14px #000a;
+      margin-left: auto;
+      margin-right: auto;
     }
     label {
       font-weight: bold;
+      color: #ffe082;
     }
     select {
       width: 100%;
       margin-bottom: 1em;
       padding: 0.3em;
       font-size: 1em;
+      background: #212e47;
+      color: #ffe082;
+      border: 1px solid #ffe082;
+      border-radius: 5px;
     }
     button {
-      background: #854442;
-      color: #fff;
+      background: #ffe082;
+      color: #18263a;
       padding: 0.6em 1.5em;
       border: none;
       border-radius: 5px;
       font-size: 1.1em;
+      font-weight: bold;
       cursor: pointer;
       margin-top: 1em;
+      box-shadow: 0 2px 8px #0007;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #ffe082cc;
     }
     .msg-box, .result {
-      background: #ece3da;
+      background: rgba(32, 40, 60, 0.97);
       border-radius: 8px;
       padding: 1em;
       margin-top: 2em;
       font-size: 1.1em;
       word-break: break-word;
       white-space: pre-line;
+      box-shadow: 0 2px 16px #0008;
+      color: #ffe082;
     }
     .msg-box {
-      border: 2px dashed #a8845c;
+      border: 2px dashed #ffe08277;
       position: relative;
     }
     .copy-btn {
@@ -67,7 +92,7 @@
       font-size: 0.95em;
     }
     .premio {
-      color: #a84a24;
+      color: #ffe082;
       font-weight: bold;
     }
     .gragea-container { display: none; }
@@ -75,22 +100,69 @@
     .gragea-selector {
       margin-bottom: 2em;
       font-size: 1.1em;
+      text-align: center;
     }
     .gragea-selector label {
       font-weight: normal;
       margin-right: 1em;
+      color: #ffe082;
     }
     #grageasForm { display: none; }
     .result-title {
       margin: 2em 0 0.5em 0;
       font-weight: bold;
       font-size: 1.2em;
-      color: #854442;
+      color: #ffe082;
       letter-spacing: 1px;
+      text-align: center;
+    }
+    /* Lámparas */
+    .lampara {
+      position: fixed;
+      width: 72px;
+      height: 120px;
+      z-index: 100;
+      top: 10px;
+      pointer-events: none;
+    }
+    .lampara.left { left: 35px; }
+    .lampara.right { right: 35px; transform: scaleX(-1);}
+    .lampara .luz {
+      transition: opacity 1s;
+      opacity: 1;
+      will-change: opacity;
+    }
+    @media (max-width: 600px) {
+      .lampara { width: 40px; height: 66px; top: 10px;}
+      .lampara.left { left: 6px;}
+      .lampara.right { right: 6px;}
     }
   </style>
+  <!-- Google Fonts para un toque mágico -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Lámparas SVG -->
+  <div class="lampara left">
+    <svg width="72" height="120" viewBox="0 0 72 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="28" y="4" width="16" height="36" rx="8" fill="#222"/>
+      <ellipse cx="36" cy="52" rx="25" ry="23" fill="#aaa" />
+      <ellipse cx="36" cy="52" rx="17" ry="19" fill="#ffe082" class="luz" id="luz-izq"/>
+      <ellipse cx="36" cy="52" rx="14" ry="16" fill="#fff8dc44"/>
+      <rect x="32" y="80" width="8" height="30" rx="4" fill="#b69e74"/>
+      <rect x="33" y="110" width="6" height="8" rx="3" fill="#ffe082"/>
+    </svg>
+  </div>
+  <div class="lampara right">
+    <svg width="72" height="120" viewBox="0 0 72 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="28" y="4" width="16" height="36" rx="8" fill="#222"/>
+      <ellipse cx="36" cy="52" rx="25" ry="23" fill="#aaa" />
+      <ellipse cx="36" cy="52" rx="17" ry="19" fill="#ffe082" class="luz" id="luz-der"/>
+      <ellipse cx="36" cy="52" rx="14" ry="16" fill="#fff8dc44"/>
+      <rect x="32" y="80" width="8" height="30" rx="4" fill="#b69e74"/>
+      <rect x="33" y="110" width="6" height="8" rx="3" fill="#ffe082"/>
+    </svg>
+  </div>
   <h1>Apertura de Grageas</h1>
   
   <div class="gragea-selector">
@@ -137,6 +209,13 @@
   <div class="result" id="result" style="display:none;"></div>
 
   <script>
+    // Solo el emoji
+    function extraerEmojis(sabor) {
+      const regexEmoji = /([\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F][\u200D\u2640-\u2642\uFE0F]*\s*)+$/gu;
+      let match = sabor.match(regexEmoji);
+      return match ? match[0].trim() : sabor;
+    }
+
     const sabores = [
       "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
       "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
@@ -246,7 +325,7 @@
       premiosPorGragea.forEach((trio, idx) => {
         msg += `Gragea ${idx + 1}\n`;
         trio.forEach(par => {
-          msg += `${par.sabor} ⟶ ${par.premio}\n\n`;
+          msg += `${extraerEmojis(par.sabor)} ⟶ ${par.premio}\n\n`;
         });
       });
       msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
@@ -291,6 +370,20 @@
 
     // Inicialmente ocultar el formulario
     actualizarGrageas();
+
+    // Animación de titileo lámparas cada 10 segundos
+    function titilarLamparas() {
+      let l1 = document.getElementById('luz-izq');
+      let l2 = document.getElementById('luz-der');
+      if (!l1 || !l2) return;
+      l1.style.opacity = '0.3';
+      l2.style.opacity = '0.3';
+      setTimeout(() => {
+        l1.style.opacity = '1';
+        l2.style.opacity = '1';
+      }, 800);
+    }
+    setInterval(titilarLamparas, 10000);
   </script>
 </body>
 </html>
