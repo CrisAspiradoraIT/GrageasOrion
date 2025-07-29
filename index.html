@@ -41,12 +41,30 @@
       cursor: pointer;
       margin-top: 1em;
     }
-    .result {
+    .msg-box, .result {
       background: #ece3da;
       border-radius: 8px;
       padding: 1em;
       margin-top: 2em;
       font-size: 1.1em;
+      word-break: break-word;
+      white-space: pre-line;
+    }
+    .msg-box {
+      border: 2px dashed #a8845c;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      background: #a8845c;
+      color: #fff;
+      padding: 0.3em 1em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95em;
     }
     .premio {
       color: #a84a24;
@@ -63,6 +81,13 @@
       margin-right: 1em;
     }
     #grageasForm { display: none; }
+    .result-title {
+      margin: 2em 0 0.5em 0;
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #854442;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -100,7 +125,16 @@
     </div>
     <button type="submit">Abrir Grageas</button>
   </form>
-  <div class="result" id="result" style="display:none"></div>
+
+  <!-- Mensaje bonito para copiar -->
+  <div class="msg-box" id="msgBox" style="display:none;position:relative;">
+    <button class="copy-btn" id="copyBtn" title="Copiar mensaje">Copiar</button>
+    <span id="msgContent"></span>
+  </div>
+
+  <!-- Resultados -->
+  <div class="result-title" id="resultTitle" style="display:none;">RESULTADOS</div>
+  <div class="result" id="result" style="display:none;"></div>
 
   <script>
     const sabores = [
@@ -162,6 +196,8 @@
       if (isNaN(cuantas)) {
         form.style.display = 'none';
         document.getElementById('result').style.display = 'none';
+        document.getElementById('resultTitle').style.display = 'none';
+        document.getElementById('msgBox').style.display = 'none';
         return;
       } else {
         form.style.display = 'block';
@@ -176,8 +212,10 @@
           box.querySelectorAll('select').forEach(sel => sel.required = false);
         }
       }
-      // Limpiar resultado al cambiar cantidad
+      // Limpiar resultado y mensaje bonito al cambiar cantidad
       document.getElementById('result').style.display = 'none';
+      document.getElementById('resultTitle').style.display = 'none';
+      document.getElementById('msgBox').style.display = 'none';
     }
 
     document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
@@ -187,10 +225,29 @@
       return premios[Math.floor(Math.random() * premios.length)];
     }
 
-    // Al hacer submit, muestra el resultado con premios aleatorios
+    // Al hacer submit, muestra el resultado con premios aleatorios y el mensaje bonito
     document.getElementById('grageasForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+
+      // Mensaje bonito
+      let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
+      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n";
+      for (let i = 1; i <= cuantas; i++) {
+        msg += `${i}\n`;
+        for (let j = 1; j <= 3; j++) {
+          const sabor = this[`gragea${i}-sabor${j}`].value;
+          msg += `→ ${sabor}\n`;
+        }
+        msg += '\n';
+      }
+      msg += '@⁨\n';
+      msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
+
+      document.getElementById('msgContent').innerText = msg;
+      document.getElementById('msgBox').style.display = 'block';
+
+      // Resultados con premios
       let resultado = "";
       for (let i = 1; i <= cuantas; i++) {
         resultado += `<strong>Gragea ${i}:</strong><br>`;
@@ -204,6 +261,27 @@
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = resultado;
       resultDiv.style.display = 'block';
+      document.getElementById('resultTitle').style.display = 'block';
+    });
+
+    // Copiar mensaje bonito al portapapeles
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      const text = document.getElementById('msgContent').innerText;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          this.innerText = "¡Copiado!";
+          setTimeout(() => { this.innerText = "Copiar"; }, 1200);
+        });
+      } else { // fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        this.innerText = "¡Copiado!";
+        setTimeout(() => { this.innerText = "Copiar"; }, 1200);
+      }
     });
 
     // Inicialmente ocultar el formulario
