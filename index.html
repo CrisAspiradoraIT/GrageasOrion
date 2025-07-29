@@ -48,6 +48,10 @@
       margin-top: 2em;
       font-size: 1.1em;
     }
+    .premio {
+      color: #a84a24;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -77,129 +81,45 @@
 
   <script>
     const sabores = [
-      "Aceitunas 🫒",
-      "Ajo crudo 🧄",
-      "Alga marina 🪸",
-      "Aliento de dragón 🐉🌬",
-      "Aliento de ogro 🧌",
-      "Algodón de azúcar 🍭",
-      "Arándanos 🫐",
-      "Baba de caracol 🐌",
-      "Bellini 🥂",
-      "Beso no correspondido 💋💔",
-      "Biberón 🍼",
-      "Blody Mary 🫗🩸",
-      "Brillo labial 💋💄",
-      "Burrito 🌯",
-      "Cacahuate 🥜",
-      "Caña de azúcar 🎋",
-      "Canela en polvo 🍂",
-      "Cáscara de plátano 🍌",
-      "Café frío ☕",
-      "Café quemado ☕🔥",
-      "Caldo de murciélago 🦇🍲",
-      "Cebolla caramelizada 🧅",
-      "Cereza 🍒",
-      "Cerveza 🍺",
-      "Chicle de menta 🍬",
-      "Chisme express🫦☕",
-      "Chorizo 🥩",
-      "Cítricos 🍋",
-      "Coco 🥥",
-      "Cóctel 🍸",
-      "Coliflor cruda 🥦",
-      "Cera de oído 👂",
-      "Champaña 🥂",
-      "Chocolate 🍫",
-      "Cupcake 🧁",
-      "Donas 🍩",
-      "Drama queen 👑💅🏼",
-      "Dulce de leche 🥮",
-      "Dumpling 🥟",
-      "Durazno 🍑",
-      "Ensalada 🥗",
-      "Esencia de mandrágora 🌱",
-      "Espinaca cocida 🍲",
-      "Espuma de mar 🌊",
-      "Estiércol de dragón 🐉💩",
-      "Ex 👅",
-      "Exponme 👀🔮",
-      "Flor de cactus 🌵",
-      "Frutilla 🍓",
-      "Galleta de avena 🍪",
-      "Gelatina de sapo 🐸",
-      "Guisado 🍛",
-      "Guisantes triturados 🫛",
-      "Helado de calabaza 🎃",
-      "Helado de vainilla 🍨",
-      "Hielo 🧊",
-      "Hojas secas 🍁",
-      "Hueso dragón tostado 🦴",
-      "Huevo frito 🍳",
-      "Huevo podrido 🥚",
-      "Jarabe de arce 🍯",
-      "Jugo de pepino 🥒",
-      "Kiwi 🥝",
-      "Leche 🐮",
-      "Leche caducada 🥛",
-      "Leche podrida 🧋",
-      "Lo juro ✋🏻",
-      "Manteca de maní 🥜",
-      "Manteca rancia 🧈",
-      "Margarita 🍸",
-      "Martini 🍸",
-      "Mate 🧉",
-      "Menta 🌿",
-      "Mezcla de hongos 🍄",
-      "Mermelada de escarabajo 🪲",
-      "Moco 🦠",
-      "Naruto 🍥",
-      "Negroni 🥃",
-      "Onigiri 🍙",
-      "Ostras vivas 🦪",
-      "Pan con hongos 🫓",
-      "Papas fritas 🍟",
-      "Pasta de dientes 🪥",
-      "Pasta pegajosa 🍝",
-      "Pastel 🍰",
-      "Pepino 🥒",
-      "Picante 🌶",
-      "Pie de manzana 🥧",
-      "Pimiento asado 🫑",
-      "Piña colada 🍹",
-      "Pizza 🍕",
-      "Pollo asado 🍗",
-      "Polvos mágicos ✨",
-      "Pudín 🍮",
-      "Queso mohoso 🧀",
-      "Redflag 🚩",
-      "Raíz de mandrágora 🌱",
-      "Ron añejo 🍾",
-      "Sal marina 🧂",
-      "Sandía 🍉",
-      "Sangre 🩸",
-      "Sangre de unicornio 🦄",
-      "Sangre de unicornio oxidada 🦄",
-      "Sardinas enlatadas 🐟",
-      "Sexo en la playa 🥃🏖",
-      "Soju 🍶",
-      "Sopa de pescado 🍵",
-      "Sopa de pescado en mal estado 🍵",
-      "Spaguetti 🍝",
-      "Sudor 💦",
-      "Sudor de troll 🧟‍♂💦",
-      "Sushi 🍣",
-      "Tacos 🌮",
-      "Tamal 🫔",
-      "Te negro 🫖🖤",
-      "Tinta de pulpo 🐙",
-      "Trigo seco 🌾",
-      "Tronco podrido 🪵",
-      "Tocino 🥓",
-      "Vino 🍷",
-      "Vómito 🤮",
-      "Waffles 🧇",
-      "Whisky ⁠🥃"
+      "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
+      "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
+      "Biberón 🍼", "Blody Mary 🫗🩸", "Brillo labial 💋💄", "Burrito 🌯", "Cacahuate 🥜", "Caña de azúcar 🎋",
+      "Canela en polvo 🍂", "Cáscara de plátano 🍌", "Café frío ☕", "Café quemado ☕🔥", "Caldo de murciélago 🦇🍲",
+      "Cebolla caramelizada 🧅", "Cereza 🍒", "Cerveza 🍺", "Chicle de menta 🍬", "Chisme express🫦☕",
+      "Chorizo 🥩", "Cítricos 🍋", "Coco 🥥", "Cóctel 🍸", "Coliflor cruda 🥦", "Cera de oído 👂",
+      "Champaña 🥂", "Chocolate 🍫", "Cupcake 🧁", "Donas 🍩", "Drama queen 👑💅🏼", "Dulce de leche 🥮",
+      "Dumpling 🥟", "Durazno 🍑", "Ensalada 🥗", "Esencia de mandrágora 🌱", "Espinaca cocida 🍲",
+      "Espuma de mar 🌊", "Estiércol de dragón 🐉💩", "Ex 👅", "Exponme 👀🔮", "Flor de cactus 🌵", "Frutilla 🍓",
+      "Galleta de avena 🍪", "Gelatina de sapo 🐸", "Guisado 🍛", "Guisantes triturados 🫛", "Helado de calabaza 🎃",
+      "Helado de vainilla 🍨", "Hielo 🧊", "Hojas secas 🍁", "Hueso dragón tostado 🦴", "Huevo frito 🍳",
+      "Huevo podrido 🥚", "Jarabe de arce 🍯", "Jugo de pepino 🥒", "Kiwi 🥝", "Leche 🐮", "Leche caducada 🥛",
+      "Leche podrida 🧋", "Lo juro ✋🏻", "Manteca de maní 🥜", "Manteca rancia 🧈", "Margarita 🍸", "Martini 🍸",
+      "Mate 🧉", "Menta 🌿", "Mezcla de hongos 🍄", "Mermelada de escarabajo 🪲", "Moco 🦠", "Naruto 🍥",
+      "Negroni 🥃", "Onigiri 🍙", "Ostras vivas 🦪", "Pan con hongos 🫓", "Papas fritas 🍟", "Pasta de dientes 🪥",
+      "Pasta pegajosa 🍝", "Pastel 🍰", "Pepino 🥒", "Picante 🌶", "Pie de manzana 🥧", "Pimiento asado 🫑",
+      "Piña colada 🍹", "Pizza 🍕", "Pollo asado 🍗", "Polvos mágicos ✨", "Pudín 🍮", "Queso mohoso 🧀",
+      "Redflag 🚩", "Raíz de mandrágora 🌱", "Ron añejo 🍾", "Sal marina 🧂", "Sandía 🍉", "Sangre 🩸",
+      "Sangre de unicornio 🦄", "Sangre de unicornio oxidada 🦄", "Sardinas enlatadas 🐟", "Sexo en la playa 🥃🏖",
+      "Soju 🍶", "Sopa de pescado 🍵", "Sopa de pescado en mal estado 🍵", "Spaguetti 🍝", "Sudor 💦",
+      "Sudor de troll 🧟‍♂💦", "Sushi 🍣", "Tacos 🌮", "Tamal 🫔", "Te negro 🫖🖤", "Tinta de pulpo 🐙",
+      "Trigo seco 🌾", "Tronco podrido 🪵", "Tocino 🥓", "Vino 🍷", "Vómito 🤮", "Waffles 🧇", "Whisky ⁠🥃"
+    ];
+
+    const premios = [
+      "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Detonadores trampa 🪤", "Mapa del merodeador 🗺",
+      "Anillo de Morfín Gaunt 💍", "Varita de saúco 🪄💀", "El desiluminador 💡", "Pergamino mágico 📜",
+      "El traslador 🔮", "Carta vociferadora 💌", "Giratiempo ⏱", "Félix felicis 🍀🧪", "Pluma de Hermione 🪶",
+      "Amortentia 💘🧪", "Pastillas vomitivas 💊", "Ranita Amarilla 💛🍫", "Ranita verde 💚🍫", "Ranita roja ❤🍫",
+      "Ranita negra 🖤🍫", "Ranita rosa 🩷🍫", "Ranita lila 💜🍫", "Ranita naranja 🧡🍫", "Ranita celeste 🩵🍫",
+      "Gragea de todos los sabores 🫘", "Puedes robarle 10.000G en el caldero 🪙", "-10.000G 🪙", "-5.000G 🪙",
+      "-2.000G 🪙", "-500G 🪙", "-1.500G 🪙", "-8.000p", "-7.000p", "+8.000G 🪙", "+5.000G 🪙", "+3.000G 🪙",
+      "+1.500G 🪙", "-10.000p", "+2 ranitas a elección", "Se te restan dos productos de tu inventario (al azar)",
+      "+10.000p", "+8.000p", "+5.000p", "Puedes robarle 10.000p a alguien", "Puedes robarle 8.000p a alguien",
+      "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
+      "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
+      "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
+      "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
+      "La recordadora de Neville 🎱"
     ];
 
     // Llena todos los selects con la lista de sabores
@@ -212,18 +132,23 @@
       });
     });
 
-    // Al hacer submit, muestra el resultado
+    // Función para obtener premio aleatorio
+    function premioAleatorio() {
+      return premios[Math.floor(Math.random() * premios.length)];
+    }
+
+    // Al hacer submit, muestra el resultado con premios aleatorios
     document.getElementById('grageasForm').addEventListener('submit', function(e) {
       e.preventDefault();
       let resultado = "";
       for (let i = 1; i <= 3; i++) {
         resultado += `<strong>Gragea ${i}:</strong><br>`;
-        let saboresGragea = [];
         for (let j = 1; j <= 3; j++) {
-          let value = this[`gragea${i}-sabor${j}`].value;
-          saboresGragea.push(value);
+          let sabor = this[`gragea${i}-sabor${j}`].value;
+          let premio = premioAleatorio();
+          resultado += `${sabor} <br><span class="premio">Premio: ${premio}</span><br>`;
         }
-        resultado += saboresGragea.join(', ') + "<br><br>";
+        resultado += "<br>";
       }
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = resultado;
