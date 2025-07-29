@@ -7,13 +7,13 @@
     body {
       min-height: 100vh;
       font-family: 'Merriweather', serif;
-      background-color: #18263a;
-      background-image: url('https://www.transparenttextures.com/patterns/brick-wall.png');
-      /* Brick wall texture, puedes buscar otra si prefieres */
+      background-color: #101522;
+      background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
       color: #f4e7d0;
       padding: 2em;
       position: relative;
       box-sizing: border-box;
+      overflow-x: hidden;
     }
     h1 {
       color: #ffe082;
@@ -21,16 +21,16 @@
       text-shadow: 2px 2px 8px #000, 0 0 16px #ffe08299;
       font-family: 'Cinzel', serif;
       text-align: center;
-      margin-top: 60px;
+      margin-top: 80px;
     }
     .gragea-container {
       border: 2px solid #ffe082;
       border-radius: 10px;
-      background: rgba(20, 24, 40, 0.98);
+      background: rgba(16, 21, 34, 0.99);
       padding: 1em 2em;
       margin-bottom: 1.5em;
       max-width: 400px;
-      box-shadow: 2px 2px 14px #000a;
+      box-shadow: 2px 2px 20px #000d;
       margin-left: auto;
       margin-right: auto;
     }
@@ -50,7 +50,7 @@
     }
     button {
       background: #ffe082;
-      color: #18263a;
+      color: #191b25;
       padding: 0.6em 1.5em;
       border: none;
       border-radius: 5px;
@@ -58,21 +58,21 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 1em;
-      box-shadow: 0 2px 8px #0007;
-      transition: background 0.3s;
+      box-shadow: 0 2px 8px #0008;
+      transition: background .3s;
     }
     button:hover {
       background: #ffe082cc;
     }
     .msg-box, .result {
-      background: rgba(32, 40, 60, 0.97);
+      background: rgba(24, 28, 45, 0.99);
       border-radius: 8px;
       padding: 1em;
       margin-top: 2em;
       font-size: 1.1em;
       word-break: break-word;
       white-space: pre-line;
-      box-shadow: 0 2px 16px #0008;
+      box-shadow: 0 2px 20px #0007;
       color: #ffe082;
     }
     .msg-box {
@@ -116,51 +116,70 @@
       letter-spacing: 1px;
       text-align: center;
     }
-    /* Lámparas */
-    .lampara {
+
+    /* VELAS */
+    .vela-hp {
       position: fixed;
-      width: 72px;
-      height: 120px;
-      z-index: 100;
-      top: 10px;
+      width: 65px;
+      height: 110px;
+      z-index: 200;
+      top: 24px;
       pointer-events: none;
+      user-select: none;
     }
-    .lampara.left { left: 35px; }
-    .lampara.right { right: 35px; transform: scaleX(-1);}
-    .lampara .luz {
-      transition: opacity 1s;
-      opacity: 1;
-      will-change: opacity;
-    }
+    .vela-hp.left { left: 35px; }
+    .vela-hp.right { right: 35px; transform: scaleX(-1);}
     @media (max-width: 600px) {
-      .lampara { width: 40px; height: 66px; top: 10px;}
-      .lampara.left { left: 6px;}
-      .lampara.right { right: 6px;}
+      .vela-hp { width: 41px; height: 70px; top: 10px;}
+      .vela-hp.left { left: 6px;}
+      .vela-hp.right { right: 6px;}
+    }
+    .flama {
+      opacity: 1;
+      transition: opacity 1.3s;
+      filter: drop-shadow(0 0 7px #fff6b6) drop-shadow(0 0 14px #ffe082);
+      transform-origin: 50% 100%;
+      /* Para efecto de movimiento */
+      animation: flame-move 1.2s infinite alternate cubic-bezier(.6,-0.28,.74,1.15);
+    }
+    @keyframes flame-move {
+      from { transform: scaleY(1) translateY(0px) skewX(-4deg);}
+      to   { transform: scaleY(1.08) translateY(-4px) skewX(4deg);}
+    }
+    .vela-body {
+      opacity: 0.92;
+      filter: brightness(1.12);
     }
   </style>
   <!-- Google Fonts para un toque mágico -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Lámparas SVG -->
-  <div class="lampara left">
-    <svg width="72" height="120" viewBox="0 0 72 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="28" y="4" width="16" height="36" rx="8" fill="#222"/>
-      <ellipse cx="36" cy="52" rx="25" ry="23" fill="#aaa" />
-      <ellipse cx="36" cy="52" rx="17" ry="19" fill="#ffe082" class="luz" id="luz-izq"/>
-      <ellipse cx="36" cy="52" rx="14" ry="16" fill="#fff8dc44"/>
-      <rect x="32" y="80" width="8" height="30" rx="4" fill="#b69e74"/>
-      <rect x="33" y="110" width="6" height="8" rx="3" fill="#ffe082"/>
+  <!-- Velas Harry Potter, SVG animado -->
+  <div class="vela-hp left">
+    <svg width="65" height="110" viewBox="0 0 65 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hilo -->
+      <rect x="29" y="19" width="7" height="12" rx="2.5" fill="#5a4a1f"/>
+      <!-- Flama -->
+      <ellipse class="flama" id="vela-flama-izq" cx="32.5" cy="17" rx="7" ry="14" fill="#ffe082" />
+      <ellipse class="flama" cx="32.5" cy="21" rx="4" ry="7" fill="#fffbe1bb" />
+      <!-- Cuerpo vela -->
+      <rect class="vela-body" x="16" y="25" width="33" height="70" rx="10" fill="#fff8e1" stroke="#e7d07d" stroke-width="2"/>
+      <!-- Gotas de cera -->
+      <ellipse class="vela-body" cx="32.5" cy="31" rx="8" ry="4" fill="#fff9dc"/>
+      <ellipse class="vela-body" cx="32.5" cy="85" rx="8" ry="5" fill="#efe3b6"/>
+      <ellipse class="vela-body" cx="32.5" cy="54" rx="5" ry="2" fill="#fff2c8"/>
     </svg>
   </div>
-  <div class="lampara right">
-    <svg width="72" height="120" viewBox="0 0 72 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="28" y="4" width="16" height="36" rx="8" fill="#222"/>
-      <ellipse cx="36" cy="52" rx="25" ry="23" fill="#aaa" />
-      <ellipse cx="36" cy="52" rx="17" ry="19" fill="#ffe082" class="luz" id="luz-der"/>
-      <ellipse cx="36" cy="52" rx="14" ry="16" fill="#fff8dc44"/>
-      <rect x="32" y="80" width="8" height="30" rx="4" fill="#b69e74"/>
-      <rect x="33" y="110" width="6" height="8" rx="3" fill="#ffe082"/>
+  <div class="vela-hp right">
+    <svg width="65" height="110" viewBox="0 0 65 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="29" y="19" width="7" height="12" rx="2.5" fill="#5a4a1f"/>
+      <ellipse class="flama" id="vela-flama-der" cx="32.5" cy="17" rx="7" ry="14" fill="#ffe082" />
+      <ellipse class="flama" cx="32.5" cy="21" rx="4" ry="7" fill="#fffbe1bb" />
+      <rect class="vela-body" x="16" y="25" width="33" height="70" rx="10" fill="#fff8e1" stroke="#e7d07d" stroke-width="2"/>
+      <ellipse class="vela-body" cx="32.5" cy="31" rx="8" ry="4" fill="#fff9dc"/>
+      <ellipse class="vela-body" cx="32.5" cy="85" rx="8" ry="5" fill="#efe3b6"/>
+      <ellipse class="vela-body" cx="32.5" cy="54" rx="5" ry="2" fill="#fff2c8"/>
     </svg>
   </div>
   <h1>Apertura de Grageas</h1>
@@ -211,6 +230,7 @@
   <script>
     // Solo el emoji
     function extraerEmojis(sabor) {
+      // Toma todos los emojis al final del string
       const regexEmoji = /([\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F][\u200D\u2640-\u2642\uFE0F]*\s*)+$/gu;
       let match = sabor.match(regexEmoji);
       return match ? match[0].trim() : sabor;
@@ -371,19 +391,19 @@
     // Inicialmente ocultar el formulario
     actualizarGrageas();
 
-    // Animación de titileo lámparas cada 10 segundos
-    function titilarLamparas() {
-      let l1 = document.getElementById('luz-izq');
-      let l2 = document.getElementById('luz-der');
+    // Animación de titileo velas (flama) cada 12s, titila 3s
+    function titilarVelas() {
+      let l1 = document.getElementById('vela-flama-izq');
+      let l2 = document.getElementById('vela-flama-der');
       if (!l1 || !l2) return;
-      l1.style.opacity = '0.3';
-      l2.style.opacity = '0.3';
+      l1.style.opacity = '0.18';
+      l2.style.opacity = '0.18';
       setTimeout(() => {
         l1.style.opacity = '1';
         l2.style.opacity = '1';
-      }, 800);
+      }, 3000);
     }
-    setInterval(titilarLamparas, 10000);
+    setInterval(titilarVelas, 12000);
   </script>
 </body>
 </html>
