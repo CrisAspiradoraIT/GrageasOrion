@@ -62,6 +62,7 @@
       font-weight: normal;
       margin-right: 1em;
     }
+    #grageasForm { display: none; }
   </style>
 </head>
 <body>
@@ -70,9 +71,10 @@
   <div class="gragea-selector">
     <label>¿Cuántas grageas quieres abrir?
       <select id="grageaCount">
+        <option value="" selected disabled>Elige una opción</option>
         <option value="1">1 gragea</option>
         <option value="2">2 grageas</option>
-        <option value="3" selected>3 grageas</option>
+        <option value="3">3 grageas</option>
       </select>
     </label>
   </div>
@@ -143,8 +145,8 @@
       "La recordadora de Neville 🎱"
     ];
 
-    // Llena todos los selects con la lista de sabores
-    document.querySelectorAll('select').forEach(select => {
+    // Llena los selects de grageas con la lista de sabores (excepto el selector de cantidad)
+    document.querySelectorAll('.gragea-container select').forEach(select => {
       sabores.forEach(sabor => {
         const option = document.createElement('option');
         option.value = sabor;
@@ -153,9 +155,17 @@
       });
     });
 
-    // Mostrar sólo los campos de las grageas elegidas
+    // Mostrar solo los campos de las grageas elegidas y el formulario después de seleccionar cantidad
     function actualizarGrageas() {
       const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      const form = document.getElementById('grageasForm');
+      if (isNaN(cuantas)) {
+        form.style.display = 'none';
+        document.getElementById('result').style.display = 'none';
+        return;
+      } else {
+        form.style.display = 'block';
+      }
       for (let i = 1; i <= 3; i++) {
         const box = document.getElementById('gragea-box-' + i);
         if (i <= cuantas) {
@@ -171,9 +181,6 @@
     }
 
     document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
-
-    // Mostrar inicial según el default
-    actualizarGrageas();
 
     // Función para obtener premio aleatorio
     function premioAleatorio() {
@@ -198,6 +205,9 @@
       resultDiv.innerHTML = resultado;
       resultDiv.style.display = 'block';
     });
+
+    // Inicialmente ocultar el formulario
+    actualizarGrageas();
   </script>
 </body>
 </html>
