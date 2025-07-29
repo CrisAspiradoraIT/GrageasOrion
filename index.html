@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Apertura de Grageas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f6ef;
+      color: #222;
+      padding: 2em;
+    }
+    h1 {
+      color: #854442;
+    }
+    .gragea-container {
+      border: 2px solid #854442;
+      border-radius: 10px;
+      background: #fff;
+      padding: 1em 2em;
+      margin-bottom: 1.5em;
+      max-width: 400px;
+      box-shadow: 2px 2px 14px #baafa7;
+    }
+    label {
+      font-weight: bold;
+    }
+    select {
+      width: 100%;
+      margin-bottom: 1em;
+      padding: 0.3em;
+      font-size: 1em;
+    }
+    button {
+      background: #854442;
+      color: #fff;
+      padding: 0.6em 1.5em;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+    .result {
+      background: #ece3da;
+      border-radius: 8px;
+      padding: 1em;
+      margin-top: 2em;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Apertura de Grageas</h1>
+  <form id="grageasForm">
+    <div class="gragea-container">
+      <label>Gragea 1:</label>
+      <select name="gragea1-sabor1" required></select>
+      <select name="gragea1-sabor2" required></select>
+      <select name="gragea1-sabor3" required></select>
+    </div>
+    <div class="gragea-container">
+      <label>Gragea 2:</label>
+      <select name="gragea2-sabor1" required></select>
+      <select name="gragea2-sabor2" required></select>
+      <select name="gragea2-sabor3" required></select>
+    </div>
+    <div class="gragea-container">
+      <label>Gragea 3:</label>
+      <select name="gragea3-sabor1" required></select>
+      <select name="gragea3-sabor2" required></select>
+      <select name="gragea3-sabor3" required></select>
+    </div>
+    <button type="submit">Abrir Grageas</button>
+  </form>
+  <div class="result" id="result" style="display:none"></div>
+
+  <script>
+    const sabores = [
+      "Aceitunas 🫒",
+      "Ajo crudo 🧄",
+      "Alga marina 🪸",
+      "Aliento de dragón 🐉🌬",
+      "Aliento de ogro 🧌",
+      "Algodón de azúcar 🍭",
+      "Arándanos 🫐",
+      "Baba de caracol 🐌",
+      "Bellini 🥂",
+      "Beso no correspondido 💋💔",
+      "Biberón 🍼",
+      "Blody Mary 🫗🩸",
+      "Brillo labial 💋💄",
+      "Burrito 🌯",
+      "Cacahuate 🥜",
+      "Caña de azúcar 🎋",
+      "Canela en polvo 🍂",
+      "Cáscara de plátano 🍌",
+      "Café frío ☕",
+      "Café quemado ☕🔥",
+      "Caldo de murciélago 🦇🍲",
+      "Cebolla caramelizada 🧅",
+      "Cereza 🍒",
+      "Cerveza 🍺",
+      "Chicle de menta 🍬",
+      "Chisme express🫦☕",
+      "Chorizo 🥩",
+      "Cítricos 🍋",
+      "Coco 🥥",
+      "Cóctel 🍸",
+      "Coliflor cruda 🥦",
+      "Cera de oído 👂",
+      "Champaña 🥂",
+      "Chocolate 🍫",
+      "Cupcake 🧁",
+      "Donas 🍩",
+      "Drama queen 👑💅🏼",
+      "Dulce de leche 🥮",
+      "Dumpling 🥟",
+      "Durazno 🍑",
+      "Ensalada 🥗",
+      "Esencia de mandrágora 🌱",
+      "Espinaca cocida 🍲",
+      "Espuma de mar 🌊",
+      "Estiércol de dragón 🐉💩",
+      "Ex 👅",
+      "Exponme 👀🔮",
+      "Flor de cactus 🌵",
+      "Frutilla 🍓",
+      "Galleta de avena 🍪",
+      "Gelatina de sapo 🐸",
+      "Guisado 🍛",
+      "Guisantes triturados 🫛",
+      "Helado de calabaza 🎃",
+      "Helado de vainilla 🍨",
+      "Hielo 🧊",
+      "Hojas secas 🍁",
+      "Hueso dragón tostado 🦴",
+      "Huevo frito 🍳",
+      "Huevo podrido 🥚",
+      "Jarabe de arce 🍯",
+      "Jugo de pepino 🥒",
+      "Kiwi 🥝",
+      "Leche 🐮",
+      "Leche caducada 🥛",
+      "Leche podrida 🧋",
+      "Lo juro ✋🏻",
+      "Manteca de maní 🥜",
+      "Manteca rancia 🧈",
+      "Margarita 🍸",
+      "Martini 🍸",
+      "Mate 🧉",
+      "Menta 🌿",
+      "Mezcla de hongos 🍄",
+      "Mermelada de escarabajo 🪲",
+      "Moco 🦠",
+      "Naruto 🍥",
+      "Negroni 🥃",
+      "Onigiri 🍙",
+      "Ostras vivas 🦪",
+      "Pan con hongos 🫓",
+      "Papas fritas 🍟",
+      "Pasta de dientes 🪥",
+      "Pasta pegajosa 🍝",
+      "Pastel 🍰",
+      "Pepino 🥒",
+      "Picante 🌶",
+      "Pie de manzana 🥧",
+      "Pimiento asado 🫑",
+      "Piña colada 🍹",
+      "Pizza 🍕",
+      "Pollo asado 🍗",
+      "Polvos mágicos ✨",
+      "Pudín 🍮",
+      "Queso mohoso 🧀",
+      "Redflag 🚩",
+      "Raíz de mandrágora 🌱",
+      "Ron añejo 🍾",
+      "Sal marina 🧂",
+      "Sandía 🍉",
+      "Sangre 🩸",
+      "Sangre de unicornio 🦄",
+      "Sangre de unicornio oxidada 🦄",
+      "Sardinas enlatadas 🐟",
+      "Sexo en la playa 🥃🏖",
+      "Soju 🍶",
+      "Sopa de pescado 🍵",
+      "Sopa de pescado en mal estado 🍵",
+      "Spaguetti 🍝",
+      "Sudor 💦",
+      "Sudor de troll 🧟‍♂💦",
+      "Sushi 🍣",
+      "Tacos 🌮",
+      "Tamal 🫔",
+      "Te negro 🫖🖤",
+      "Tinta de pulpo 🐙",
+      "Trigo seco 🌾",
+      "Tronco podrido 🪵",
+      "Tocino 🥓",
+      "Vino 🍷",
+      "Vómito 🤮",
+      "Waffles 🧇",
+      "Whisky ⁠🥃"
+    ];
+
+    // Llena todos los selects con la lista de sabores
+    document.querySelectorAll('select').forEach(select => {
+      sabores.forEach(sabor => {
+        const option = document.createElement('option');
+        option.value = sabor;
+        option.innerText = sabor;
+        select.appendChild(option);
+      });
+    });
+
+    // Al hacer submit, muestra el resultado
+    document.getElementById('grageasForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let resultado = "";
+      for (let i = 1; i <= 3; i++) {
+        resultado += `<strong>Gragea ${i}:</strong><br>`;
+        let saboresGragea = [];
+        for (let j = 1; j <= 3; j++) {
+          let value = this[`gragea${i}-sabor${j}`].value;
+          saboresGragea.push(value);
+        }
+        resultado += saboresGragea.join(', ') + "<br><br>";
+      }
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = resultado;
+      resultDiv.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
