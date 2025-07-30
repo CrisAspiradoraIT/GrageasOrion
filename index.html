@@ -304,35 +304,50 @@ const db = firebase.firestore();
     }
 
     // Mostrar historial de Firebase
-    function mostrarHistorialFirebase() {
-      const box = document.getElementById("historialGrageasBox");
-      box.innerHTML = "Cargando historial...";
-      const coleccion = db.collection('historialGrageas').orderBy('fecha', 'desc').limit(20);
-      coleccion.get().then(snapshot => {
-        if (snapshot.empty) {
-          box.innerHTML = "No hay historial aún.";
-          box.style.display = 'block';
-          return;
-        }
-        let html = '';
-        snapshot.forEach(doc => {
-          const entry = doc.data();
-          html += `<strong>${new Date(entry.fecha).toLocaleString()}</strong><br>`;
-          entry.grageas.forEach((trio, i) => {
-            html += `<u>Gragea ${i + 1}:</u><br>`;
-            trio.forEach(par => {
-              html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
-            });
-          });
-          html += '<hr style="border-color:#ffe08277">';
-        });
-        box.innerHTML = html;
-        box.style.display = 'block';
-      }).catch(error => {
-        console.error(error);
-        box.innerHTML = "Error al cargar historial.";
-      });
+   function mostrarHistorialFirebase() {
+  const box = document.getElementById("historialGrageasBox");
+  box.innerHTML = "Cargando historial...";
+  const coleccion = db.collection('historialGrageas').orderBy('fecha', 'desc').limit(20);
+
+  coleccion.get().then(snapshot => {
+    if (snapshot.empty) {
+      box.innerHTML = "No hay historial aún.";
+      box.style.display = 'block';
+      return;
     }
+
+    let html = '';
+    snapshot.forEach(doc => {
+      const entry = doc.data();
+      html += `<strong>${new Date(entry.fecha).toLocaleString()}</strong><br>`;
+
+      // Agrupar por gragea
+      const grageasAgrupadas = {};
+      entry.grageas.forEach(par => {
+        if (!grageasAgrupadas[par.gragea]) {
+          grageasAgrupadas[par.gragea] = [];
+        }
+        grageasAgrupadas[par.gragea].push(par);
+      });
+
+      Object.entries(grageasAgrupadas).forEach(([num, trio]) => {
+        html += `<u>Gragea ${num}:</u><br>`;
+        trio.forEach(par => {
+          html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
+        });
+      });
+
+      html += '<hr style="border-color:#ffe08277">';
+    });
+
+    box.innerHTML = html;
+    box.style.display = 'block';
+  }).catch(error => {
+    console.error(error);
+    box.innerHTML = "Error al cargar historial.";
+  });
+}
+
 
     // Copiar texto al portapapeles
     function copiarAlPortapapeles(texto) {
