@@ -236,7 +236,7 @@ const db = firebase.firestore();
       "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
       "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
       "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
-      "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
+      "Se restan 3 productos a eleccion", "Se restan два продукта a elección", "Espejo de Oesed 🪞",
       "La recordadora de Neville 🎱"
     ];
 
@@ -285,24 +285,23 @@ const db = firebase.firestore();
     }
 
     // Guardar historial en Firebase
-   function guardarHistorialFirebase(premiosPorGragea) {
-  const coleccion = db.collection('historialGrageas');
+    function guardarHistorialFirebase(premiosPorGragea) {
+      const coleccion = db.collection('historialGrageas');
 
-  // Aplana la estructura a un solo array de objetos con gragea y sabor/premio
-  const grageasPlanas = premiosPorGragea.flatMap((trio, index) =>
-    trio.map(par => ({
-      gragea: index + 1,
-      sabor: par.sabor,
-      premio: par.premio
-    }))
-  );
+      // Aplana la estructura a un solo array de objetos con gragea y sabor/premio
+      const grageasPlanas = premiosPorGragea.flatMap((trio, index) =>
+        trio.map(par => ({
+          gragea: index + 1,
+          sabor: par.sabor,
+          premio: par.premio
+        }))
+      );
 
-  coleccion.add({
-    fecha: new Date().toISOString(),
-    grageas: grageasPlanas
-  }).catch(console.error);
-}
-
+      coleccion.add({
+        fecha: new Date().toISOString(),
+        grageas: grageasPlanas
+      }).catch(console.error);
+    }
 
     // Mostrar historial de Firebase
     function mostrarHistorialFirebase() {
@@ -350,9 +349,11 @@ const db = firebase.firestore();
       const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
       if (isNaN(cuantas) || cuantas < 1 || cuantas > 3) return;
 
+      // Mensaje bonito
+      let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
+      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
       const premiosPorGragea = [];
-      let resultadoTexto = "";
-
+      
       for (let i = 1; i <= cuantas; i++) {
         const trio = [];
         for (let j = 1; j <= 3; j++) {
@@ -364,20 +365,18 @@ const db = firebase.firestore();
         premiosPorGragea.push(trio);
       }
 
-      // Mostrar resultados
-      resultadoTexto = "";
-      premiosPorGragea.forEach((trio, i) => {
-        resultadoTexto += `Gragea ${i + 1}:\n`;
+      premiosPorGragea.forEach((trio, idx) => {
+        msg += `Gragea ${idx + 1}\n`;
         trio.forEach(par => {
-          resultadoTexto += `${par.sabor} ⟶ ${par.premio}\n`;
+          msg += `${par.sabor} ⟶ ${par.premio}\n\n`;
         });
-        resultadoTexto += '\n';
       });
+      msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
 
       // Mostrar mensaje con botón para copiar
       const msgBox = document.getElementById('msgBox');
       const msgContent = document.getElementById('msgContent');
-      msgContent.textContent = resultadoTexto.trim();
+      msgContent.textContent = msg.trim();
       msgBox.style.display = 'block';
 
       // Mostrar resultados en la página
