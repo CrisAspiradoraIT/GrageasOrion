@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Apertura de Grageas</title>
+  <meta charset="UTF-8" />
+  <title>Apertura de Grageas con Firebase</title>
   <style>
     body {
       min-height: 100vh;
@@ -33,6 +33,10 @@
       box-shadow: 2px 2px 20px #000d;
       margin-left: auto;
       margin-right: auto;
+      display: none;
+    }
+    .gragea-container.active {
+      display: block;
     }
     label {
       font-weight: bold;
@@ -59,7 +63,7 @@
       cursor: pointer;
       margin-top: 1em;
       box-shadow: 0 2px 8px #0008;
-      transition: background .3s;
+      transition: background 0.3s;
     }
     button:hover {
       background: #ffe082cc;
@@ -74,10 +78,10 @@
       white-space: pre-line;
       box-shadow: 0 2px 20px #0007;
       color: #ffe082;
+      position: relative;
     }
     .msg-box {
       border: 2px dashed #ffe08277;
-      position: relative;
     }
     .copy-btn {
       position: absolute;
@@ -95,8 +99,6 @@
       color: #ffe082;
       font-weight: bold;
     }
-    .gragea-container { display: none; }
-    .gragea-container.active { display: block; }
     .gragea-selector {
       margin-bottom: 2em;
       font-size: 1.1em;
@@ -107,7 +109,11 @@
       margin-right: 1em;
       color: #ffe082;
     }
-    #grageasForm { display: none; }
+    #grageasForm {
+      display: none;
+      max-width: 420px;
+      margin: 0 auto;
+    }
     .result-title {
       margin: 2em 0 0.5em 0;
       font-weight: bold;
@@ -116,74 +122,12 @@
       letter-spacing: 1px;
       text-align: center;
     }
-
-    /* VELAS */
-    .vela-hp {
-      position: fixed;
-      width: 65px;
-      height: 110px;
-      z-index: 200;
-      top: 24px;
-      pointer-events: none;
-      user-select: none;
-    }
-    .vela-hp.left { left: 35px; }
-    .vela-hp.right { right: 35px; transform: scaleX(-1);}
-    @media (max-width: 600px) {
-      .vela-hp { width: 41px; height: 70px; top: 10px;}
-      .vela-hp.left { left: 6px;}
-      .vela-hp.right { right: 6px;}
-    }
-    .flama {
-      opacity: 1;
-      transition: opacity 1.3s;
-      filter: drop-shadow(0 0 7px #fff6b6) drop-shadow(0 0 14px #ffe082);
-      transform-origin: 50% 100%;
-      /* Para efecto de movimiento */
-      animation: flame-move 1.2s infinite alternate cubic-bezier(.6,-0.28,.74,1.15);
-    }
-    @keyframes flame-move {
-      from { transform: scaleY(1) translateY(0px) skewX(-4deg);}
-      to   { transform: scaleY(1.08) translateY(-4px) skewX(4deg);}
-    }
-    .vela-body {
-      opacity: 0.92;
-      filter: brightness(1.12);
-    }
   </style>
-  <!-- Google Fonts para un toque mágico -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <!-- Velas Harry Potter, SVG animado -->
-  <div class="vela-hp left">
-    <svg width="65" height="110" viewBox="0 0 65 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Hilo -->
-      <rect x="29" y="19" width="7" height="12" rx="2.5" fill="#5a4a1f"/>
-      <!-- Flama -->
-      <ellipse class="flama" id="vela-flama-izq" cx="32.5" cy="17" rx="7" ry="14" fill="#ffe082" />
-      <ellipse class="flama" cx="32.5" cy="21" rx="4" ry="7" fill="#fffbe1bb" />
-      <!-- Cuerpo vela -->
-      <rect class="vela-body" x="16" y="25" width="33" height="70" rx="10" fill="#fff8e1" stroke="#e7d07d" stroke-width="2"/>
-      <!-- Gotas de cera -->
-      <ellipse class="vela-body" cx="32.5" cy="31" rx="8" ry="4" fill="#fff9dc"/>
-      <ellipse class="vela-body" cx="32.5" cy="85" rx="8" ry="5" fill="#efe3b6"/>
-      <ellipse class="vela-body" cx="32.5" cy="54" rx="5" ry="2" fill="#fff2c8"/>
-    </svg>
-  </div>
-  <div class="vela-hp right">
-    <svg width="65" height="110" viewBox="0 0 65 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="29" y="19" width="7" height="12" rx="2.5" fill="#5a4a1f"/>
-      <ellipse class="flama" id="vela-flama-der" cx="32.5" cy="17" rx="7" ry="14" fill="#ffe082" />
-      <ellipse class="flama" cx="32.5" cy="21" rx="4" ry="7" fill="#fffbe1bb" />
-      <rect class="vela-body" x="16" y="25" width="33" height="70" rx="10" fill="#fff8e1" stroke="#e7d07d" stroke-width="2"/>
-      <ellipse class="vela-body" cx="32.5" cy="31" rx="8" ry="4" fill="#fff9dc"/>
-      <ellipse class="vela-body" cx="32.5" cy="85" rx="8" ry="5" fill="#efe3b6"/>
-      <ellipse class="vela-body" cx="32.5" cy="54" rx="5" ry="2" fill="#fff2c8"/>
-    </svg>
-  </div>
   <h1>Apertura de Grageas</h1>
-  
   <div class="gragea-selector">
     <label>¿Cuántas grageas quieres abrir?
       <select id="grageaCount">
@@ -217,8 +161,8 @@
     <button type="submit">Abrir Grageas</button>
   </form>
 
-  <!-- Mensaje bonito para copiar -->
-  <div class="msg-box" id="msgBox" style="display:none;position:relative;">
+  <!-- Mensaje para copiar -->
+  <div class="msg-box" id="msgBox" style="display:none;">
     <button class="copy-btn" id="copyBtn" title="Copiar mensaje">Copiar</button>
     <span id="msgContent"></span>
   </div>
@@ -227,204 +171,235 @@
   <div class="result-title" id="resultTitle" style="display:none;">RESULTADOS</div>
   <div class="result" id="result" style="display:none;"></div>
 
-  <button onclick="mostrarHistorial()" style="display:block;margin: 2em auto;">📜 Ver Historial de Grageas</button>
+  <button id="verHistorialBtn" style="display:block;margin: 2em auto;">📜 Ver Historial de Grageas</button>
   <div class="result" id="historialGrageasBox" style="display:none;"></div>
 
- <script>
-// Solo el emoji
-function extraerEmojis(sabor) {
-  const regexEmoji = /([\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F][\u200D\u2640-\u2642\uFE0F]*\s*)+$/gu;
-  let match = sabor.match(regexEmoji);
-  return match ? match[0].trim() : sabor;
-}
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-const sabores = [
-  "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
-  "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
-  "Biberón 🍼", "Blody Mary 🫗🩸", "Brillo labial 💋💄", "Burrito 🌯", "Cacahuate 🥜", "Caña de azúcar 🎋",
-  "Canela en polvo 🍂", "Cáscara de plátano 🍌", "Café frío ☕", "Café quemado ☕🔥", "Caldo de murciélago 🦇🍲",
-  "Cebolla caramelizada 🧅", "Cereza 🍒", "Cerveza 🍺", "Chicle de menta 🍬", "Chisme express🫦☕",
-  "Chorizo 🥩", "Cítricos 🍋", "Coco 🥥", "Cóctel 🍸", "Coliflor cruda 🥦", "Cera de oído 👂",
-  "Champaña 🥂", "Chocolate 🍫", "Cupcake 🧁", "Donas 🍩", "Drama queen 👑💅🏼", "Dulce de leche 🥮",
-  "Dumpling 🥟", "Durazno 🍑", "Ensalada 🥗", "Esencia de mandrágora 🌱", "Espinaca cocida 🍲",
-  "Espuma de mar 🌊", "Estiércol de dragón 🐉💩", "Ex 👅", "Exponme 👀🔮", "Flor de cactus 🌵", "Frutilla 🍓",
-  "Galleta de avena 🍪", "Gelatina de sapo 🐸", "Guisado 🍛", "Guisantes triturados 🫛", "Helado de calabaza 🎃",
-  "Helado de vainilla 🍨", "Hielo 🧊", "Hojas secas 🍁", "Hueso dragón tostado 🦴", "Huevo frito 🍳",
-  "Huevo podrido 🥚", "Jarabe de arce 🍯", "Jugo de pepino 🥒", "Kiwi 🥝", "Leche 🐮", "Leche caducada 🥛",
-  "Leche podrida 🧋", "Lo juro ✋🏻", "Manteca de maní 🥜", "Manteca rancia 🧈", "Margarita 🍸", "Martini 🍸",
-  "Mate 🧉", "Menta 🌿", "Mezcla de hongos 🍄", "Mermelada de escarabajo 🪲", "Moco 🦠", "Naruto 🍥",
-  "Negroni 🥃", "Onigiri 🍙", "Ostras vivas 🦪", "Pan con hongos 🫓", "Papas fritas 🍟", "Pasta de dientes 🪥",
-  "Pasta pegajosa 🍝", "Pastel 🍰", "Pepino 🥒", "Picante 🌶", "Pie de manzana 🥧", "Pimiento asado 🫑",
-  "Piña colada 🍹", "Pizza 🍕", "Pollo asado 🍗", "Polvos mágicos ✨", "Pudín 🍮", "Queso mohoso 🧀",
-  "Redflag 🚩", "Raíz de mandrágora 🌱", "Ron añejo 🍾", "Sal marina 🧂", "Sandía 🍉", "Sangre 🩸",
-  "Sangre de unicornio 🦄", "Sangre de unicornio oxidada 🦄", "Sardinas enlatadas 🐟", "Sexo en la playa 🥃🏖",
-  "Soju 🍶", "Sopa de pescado 🍵", "Sopa de pescado en mal estado 🍵", "Spaguetti 🍝", "Sudor 💦",
-  "Sudor de troll 🧟‍♂💦", "Sushi 🍣", "Tacos 🌮", "Tamal 🫔", "Te negro 🫖🖤", "Tinta de pulpo 🐙",
-  "Trigo seco 🌾", "Tronco podrido 🪵", "Tocino 🥓", "Vino 🍷", "Vómito 🤮", "Waffles 🧇", "Whisky ⁠🥃"
-];
+  <script>
+    // Configura aquí tu proyecto de Firebase (reemplaza con tus datos reales):
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_DOMINIO.firebaseapp.com",
+      projectId: "TU_PROYECTO",
+      storageBucket: "TU_PROYECTO.appspot.com",
+      messagingSenderId: "TU_ID",
+      appId: "TU_APP_ID"
+    };
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-const premios = [
-  "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Detonadores trampa 🪤", "Mapa del merodeador 🗺",
-  "Anillo de Morfín Gaunt 💍", "Varita de saúco 🪄💀", "El desiluminador 💡", "Pergamino mágico 📜",
-  "El traslador 🔮", "Carta vociferadora 💌", "Giratiempo ⏱", "Félix felicis 🍀🧪", "Pluma de Hermione 🪶",
-  "Amortentia 💘🧪", "Pastillas vomitivas 💊", "Ranita Amarilla 💛🍫", "Ranita verde 💚🍫", "Ranita roja ❤🍫",
-  "Ranita negra 🖤🍫", "Ranita rosa 🩷🍫", "Ranita lila 💜🍫", "Ranita naranja 🧡🍫", "Ranita celeste 🩵🍫",
-  "Gragea de todos los sabores 🫘", "Puedes robarle 10.000G en el caldero 🪙", "-10.000G 🪙", "-5.000G 🪙",
-  "-2.000G 🪙", "-500G 🪙", "-1.500G 🪙", "-8.000p", "-7.000p", "+8.000G 🪙", "+5.000G 🪙", "+3.000G 🪙",
-  "+1.500G 🪙", "-10.000p", "+2 ranitas a elección", "Se te restan dos productos de tu inventario (al azar)",
-  "+10.000p", "+8.000p", "+5.000p", "Puedes robarle 10.000p a alguien", "Puedes robarle 8.000p a alguien",
-  "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
-  "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
-  "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
-  "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
-  "La recordadora de Neville 🎱"
-];
+    // Lista de sabores
+    const sabores = [
+      "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
+      "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
+      "Biberón 🍼", "Blody Mary 🫗🩸", "Brillo labial 💋💄", "Burrito 🌯", "Cacahuate 🥜", "Caña de azúcar 🎋",
+      "Canela en polvo 🍂", "Cáscara de plátano 🍌", "Café frío ☕", "Café quemado ☕🔥", "Caldo de murciélago 🦇🍲",
+      "Cebolla caramelizada 🧅", "Cereza 🍒", "Cerveza 🍺", "Chicle de menta 🍬", "Chisme express🫦☕",
+      "Chorizo 🥩", "Cítricos 🍋", "Coco 🥥", "Cóctel 🍸", "Coliflor cruda 🥦", "Cera de oído 👂",
+      "Champaña 🥂", "Chocolate 🍫", "Cupcake 🧁", "Donas 🍩", "Drama queen 👑💅🏼", "Dulce de leche 🥮",
+      "Dumpling 🥟", "Durazno 🍑", "Ensalada 🥗", "Esencia de mandrágora 🌱", "Espinaca cocida 🍲",
+      "Espuma de mar 🌊", "Estiércol de dragón 🐉💩", "Ex 👅", "Exponme 👀🔮", "Flor de cactus 🌵", "Frutilla 🍓",
+      "Galleta de avena 🍪", "Gelatina de sapo 🐸", "Guisado 🍛", "Guisantes triturados 🫛", "Helado de calabaza 🎃",
+      "Helado de vainilla 🍨", "Hielo 🧊", "Hojas secas 🍁", "Hueso dragón tostado 🦴", "Huevo frito 🍳",
+      "Huevo podrido 🥚", "Jarabe de arce 🍯", "Jugo de pepino 🥒", "Kiwi 🥝", "Leche 🐮", "Leche caducada 🥛",
+      "Leche podrida 🧋", "Lo juro ✋🏻", "Manteca de maní 🥜", "Manteca rancia 🧈", "Margarita 🍸", "Martini 🍸",
+      "Mate 🧉", "Menta 🌿", "Mezcla de hongos 🍄", "Mermelada de escarabajo 🪲", "Moco 🦠", "Naruto 🍥",
+      "Negroni 🥃", "Onigiri 🍙", "Ostras vivas 🦪", "Pan con hongos 🫓", "Papas fritas 🍟", "Pasta de dientes 🪥",
+      "Pasta pegajosa 🍝", "Pastel 🍰", "Pepino 🥒", "Picante 🌶", "Pie de manzana 🥧", "Pimiento asado 🫑",
+      "Piña colada 🍹", "Pizza 🍕", "Pollo asado 🍗", "Polvos mágicos ✨", "Pudín 🍮", "Queso mohoso 🧀",
+      "Redflag 🚩", "Raíz de mandrágora 🌱", "Ron añejo 🍾", "Sal marina 🧂", "Sandía 🍉", "Sangre 🩸",
+      "Sangre de unicornio 🦄", "Sangre de unicornio oxidada 🦄", "Sardinas enlatadas 🐟", "Sexo en la playa 🥃🏖",
+      "Soju 🍶", "Sopa de pescado 🍵", "Sopa de pescado en mal estado 🍵", "Spaguetti 🍝", "Sudor 💦",
+      "Sudor de troll 🧟‍♂💦", "Sushi 🍣", "Tacos 🌮", "Tamal 🫔", "Te negro 🫖🖤", "Tinta de pulpo 🐙",
+      "Trigo seco 🌾", "Tronco podrido 🪵", "Tocino 🥓", "Vino 🍷", "Vómito 🤮", "Waffles 🧇", "Whisky ⁠🥃"
+    ];
 
-document.querySelectorAll('.gragea-container select').forEach(select => {
-  sabores.forEach(sabor => {
-    const option = document.createElement('option');
-    option.value = sabor;
-    option.innerText = sabor;
-    select.appendChild(option);
-  });
-});
+    const premios = [
+      "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Detonadores trampa 🪤", "Mapa del merodeador 🗺",
+      "Anillo de Morfín Gaunt 💍", "Varita de saúco 🪄💀", "El desiluminador 💡", "Pergamino mágico 📜",
+      "El traslador 🔮", "Carta vociferadora 💌", "Giratiempo ⏱", "Félix felicis 🍀🧪", "Pluma de Hermione 🪶",
+      "Amortentia 💘🧪", "Pastillas vomitivas 💊", "Ranita Amarilla 💛🍫", "Ranita verde 💚🍫", "Ranita roja ❤🍫",
+      "Ranita negra 🖤🍫", "Ranita rosa 🩷🍫", "Ranita lila 💜🍫", "Ranita naranja 🧡🍫", "Ranita celeste 🩵🍫",
+      "Gragea de todos los sabores 🫘", "Puedes robarle 10.000G en el caldero 🪙", "-10.000G 🪙", "-5.000G 🪙",
+      "-2.000G 🪙", "-500G 🪙", "-1.500G 🪙", "-8.000p", "-7.000p", "+8.000G 🪙", "+5.000G 🪙", "+3.000G 🪙",
+      "+1.500G 🪙", "-10.000p", "+2 ranitas a elección", "Se te restan dos productos de tu inventario (al azar)",
+      "+10.000p", "+8.000p", "+5.000p", "Puedes robarle 10.000p a alguien", "Puedes robarle 8.000p a alguien",
+      "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
+      "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
+      "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
+      "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
+      "La recordadora de Neville 🎱"
+    ];
 
-function actualizarGrageas() {
-  const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
-  const form = document.getElementById('grageasForm');
-  if (isNaN(cuantas)) {
-    form.style.display = 'none';
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('resultTitle').style.display = 'none';
-    document.getElementById('msgBox').style.display = 'none';
-    return;
-  } else {
-    form.style.display = 'block';
-  }
-  for (let i = 1; i <= 3; i++) {
-    const box = document.getElementById('gragea-box-' + i);
-    if (i <= cuantas) {
-      box.classList.add('active');
-      box.querySelectorAll('select').forEach(sel => sel.required = true);
-    } else {
-      box.classList.remove('active');
-      box.querySelectorAll('select').forEach(sel => sel.required = false);
-    }
-  }
-  document.getElementById('result').style.display = 'none';
-  document.getElementById('resultTitle').style.display = 'none';
-  document.getElementById('msgBox').style.display = 'none';
-}
-
-document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
-
-function premioAleatorio() {
-  return premios[Math.floor(Math.random() * premios.length)];
-}
-
-document.getElementById('grageasForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
-  let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
-  msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
-  let premiosPorGragea = [];
-  for (let i = 1; i <= cuantas; i++) {
-    let trio = [];
-    for (let j = 1; j <= 3; j++) {
-      const sabor = this[`gragea${i}-sabor${j}`].value;
-      const premio = premioAleatorio();
-      trio.push({sabor, premio});
-    }
-    premiosPorGragea.push(trio);
-  }
-  premiosPorGragea.forEach((trio, idx) => {
-    msg += `Gragea ${idx + 1}\n`;
-    trio.forEach(par => {
-      msg += `${extraerEmojis(par.sabor)} ⟶ ${par.premio}\n\n`;
+    // Llena selects con sabores
+    document.querySelectorAll('.gragea-container select').forEach(select => {
+      sabores.forEach(sabor => {
+        const option = document.createElement('option');
+        option.value = sabor;
+        option.innerText = sabor;
+        select.appendChild(option);
+      });
     });
-  });
-  msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
-  document.getElementById('msgContent').innerText = msg;
-  document.getElementById('msgBox').style.display = 'block';
-  let resultado = "";
-  premiosPorGragea.forEach((trio, i) => {
-    resultado += `<strong>Gragea ${i+1}:</strong><br>`;
-    trio.forEach(par => {
-      resultado += `${par.sabor} <br><span class="premio">Premio: ${par.premio}</span><br>`;
-    });
-    resultado += "<br>";
-  });
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerHTML = resultado;
-  resultDiv.style.display = 'block';
-  document.getElementById('resultTitle').style.display = 'block';
-  guardarHistorial(premiosPorGragea);
-});
 
-function guardarHistorial(premiosPorGragea) {
-  let historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
-  historial.push({
-    fecha: new Date().toLocaleString(),
-    grageas: premiosPorGragea
-  });
-  localStorage.setItem("historialGrageas", JSON.stringify(historial));
-}
+    // Mostrar formulario según cantidad elegida
+    function actualizarGrageas() {
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      const form = document.getElementById('grageasForm');
+      if (isNaN(cuantas)) {
+        form.style.display = 'none';
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('resultTitle').style.display = 'none';
+        document.getElementById('msgBox').style.display = 'none';
+        return;
+      } else {
+        form.style.display = 'block';
+      }
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById('gragea-box-' + i);
+        if (i <= cuantas) {
+          box.classList.add('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = true);
+        } else {
+          box.classList.remove('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = false);
+        }
+      }
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('resultTitle').style.display = 'none';
+      document.getElementById('msgBox').style.display = 'none';
+    }
+    document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
 
-function mostrarHistorial() {
-  const box = document.getElementById("historialGrageasBox");
-  const historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
-  if (historial.length === 0) {
-    box.innerHTML = "No hay historial aún.";
-  } else {
-    box.innerHTML = historial.map(entry => {
-      let html = `<strong>${entry.fecha}</strong><br>`;
-      entry.grageas.forEach((trio, i) => {
-        html += `<u>Gragea ${i + 1}:</u><br>`;
+    // Premio aleatorio
+    function premioAleatorio() {
+      return premios[Math.floor(Math.random() * premios.length)];
+    }
+
+    // Guardar historial en Firebase
+    function guardarHistorialFirebase(premiosPorGragea) {
+      const coleccion = db.collection('historialGrageas');
+      coleccion.add({
+        fecha: new Date().toISOString(),
+        grageas: premiosPorGragea
+      }).catch(console.error);
+    }
+
+    // Mostrar historial de Firebase
+    function mostrarHistorialFirebase() {
+      const box = document.getElementById("historialGrageasBox");
+      box.innerHTML = "Cargando historial...";
+      const coleccion = db.collection('historialGrageas').orderBy('fecha', 'desc').limit(20);
+      coleccion.get().then(snapshot => {
+        if (snapshot.empty) {
+          box.innerHTML = "No hay historial aún.";
+          box.style.display = 'block';
+          return;
+        }
+        let html = '';
+        snapshot.forEach(doc => {
+          const entry = doc.data();
+          html += `<strong>${new Date(entry.fecha).toLocaleString()}</strong><br>`;
+          entry.grageas.forEach((trio, i) => {
+            html += `<u>Gragea ${i + 1}:</u><br>`;
+            trio.forEach(par => {
+              html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
+            });
+          });
+          html += '<hr style="border-color:#ffe08277">';
+        });
+        box.innerHTML = html;
+        box.style.display = 'block';
+      }).catch(error => {
+        console.error(error);
+        box.innerHTML = "Error al cargar historial.";
+      });
+    }
+
+    // Copiar texto al portapapeles
+    function copiarAlPortapapeles(texto) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("¡Texto copiado!");
+      }, () => {
+        alert("No se pudo copiar el texto.");
+      });
+    }
+
+    // Form submit
+    document.getElementById('grageasForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      if (isNaN(cuantas) || cuantas < 1 || cuantas > 3) return;
+
+      const premiosPorGragea = [];
+      let resultadoTexto = "";
+
+      for (let i = 1; i <= cuantas; i++) {
+        const trio = [];
+        for (let j = 1; j <= 3; j++) {
+          const select = this.querySelector(`select[name="gragea${i}-sabor${j}"]`);
+          const sabor = select.value;
+          const premio = premioAleatorio();
+          trio.push({ sabor, premio });
+        }
+        premiosPorGragea.push(trio);
+      }
+
+      // Mostrar resultados
+      resultadoTexto = "";
+      premiosPorGragea.forEach((trio, i) => {
+        resultadoTexto += `Gragea ${i + 1}:\n`;
+        trio.forEach(par => {
+          resultadoTexto += `${par.sabor} ⟶ ${par.premio}\n`;
+        });
+        resultadoTexto += '\n';
+      });
+
+      // Mostrar mensaje con botón para copiar
+      const msgBox = document.getElementById('msgBox');
+      const msgContent = document.getElementById('msgContent');
+      msgContent.textContent = resultadoTexto.trim();
+      msgBox.style.display = 'block';
+
+      // Mostrar resultados en la página
+      const resultBox = document.getElementById('result');
+      const resultTitle = document.getElementById('resultTitle');
+      let html = '';
+      premiosPorGragea.forEach((trio, i) => {
+        html += `<div><strong>Gragea ${i + 1}:</strong><br>`;
         trio.forEach(par => {
           html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
         });
+        html += '</div><br>';
       });
-      return html + "<br>";
-    }).join('');
-  }
-  box.style.display = 'block';
-}
+      resultBox.innerHTML = html;
+      resultBox.style.display = 'block';
+      resultTitle.style.display = 'block';
 
-document.getElementById('copyBtn').addEventListener('click', function() {
-  const text = document.getElementById('msgContent').innerText;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      this.innerText = "¡Copiado!";
-      setTimeout(() => { this.innerText = "Copiar"; }, 1200);
+      // Guardar en Firebase
+      guardarHistorialFirebase(premiosPorGragea);
     });
-  } else {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    this.innerText = "¡Copiado!";
-    setTimeout(() => { this.innerText = "Copiar"; }, 1200);
-  }
-});
 
-actualizarGrageas();
+    // Botón copiar mensaje
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      const texto = document.getElementById('msgContent').textContent;
+      copiarAlPortapapeles(texto);
+    });
 
-function titilarVelas() {
-  let l1 = document.getElementById('vela-flama-izq');
-  let l2 = document.getElementById('vela-flama-der');
-  if (!l1 || !l2) return;
-  l1.style.opacity = '0.18';
-  l2.style.opacity = '0.18';
-  setTimeout(() => {
-    l1.style.opacity = '1';
-    l2.style.opacity = '1';
-  }, 3000);
-}
-
-
-  setInterval(titilarVelas, 12000);
-</script>
+    // Botón ver historial
+    document.getElementById('verHistorialBtn').addEventListener('click', function() {
+      const box = document.getElementById("historialGrageasBox");
+      if (box.style.display === 'block') {
+        box.style.display = 'none';
+        this.textContent = "📜 Ver Historial de Grageas";
+      } else {
+        mostrarHistorialFirebase();
+        this.textContent = "Cerrar Historial";
+      }
+    });
+  </script>
 </body>
 </html>
