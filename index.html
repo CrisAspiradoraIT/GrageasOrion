@@ -230,214 +230,200 @@
   <button onclick="mostrarHistorial()" style="display:block;margin: 2em auto;">📜 Ver Historial de Grageas</button>
   <div class="result" id="historialGrageasBox" style="display:none;"></div>
 
-  <script>
-    // Solo el emoji
-    function extraerEmojis(sabor) {
-      // Toma todos los emojis al final del string
-      const regexEmoji = /([\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F][\u200D\u2640-\u2642\uFE0F]*\s*)+$/gu;
-      let match = sabor.match(regexEmoji);
-      return match ? match[0].trim() : sabor;
+ <script>
+// Solo el emoji
+function extraerEmojis(sabor) {
+  const regexEmoji = /([\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F][\u200D\u2640-\u2642\uFE0F]*\s*)+$/gu;
+  let match = sabor.match(regexEmoji);
+  return match ? match[0].trim() : sabor;
+}
+
+const sabores = [
+  "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
+  "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
+  "Biberón 🍼", "Blody Mary 🫗🩸", "Brillo labial 💋💄", "Burrito 🌯", "Cacahuate 🥜", "Caña de azúcar 🎋",
+  "Canela en polvo 🍂", "Cáscara de plátano 🍌", "Café frío ☕", "Café quemado ☕🔥", "Caldo de murciélago 🦇🍲",
+  "Cebolla caramelizada 🧅", "Cereza 🍒", "Cerveza 🍺", "Chicle de menta 🍬", "Chisme express🫦☕",
+  "Chorizo 🥩", "Cítricos 🍋", "Coco 🥥", "Cóctel 🍸", "Coliflor cruda 🥦", "Cera de oído 👂",
+  "Champaña 🥂", "Chocolate 🍫", "Cupcake 🧁", "Donas 🍩", "Drama queen 👑💅🏼", "Dulce de leche 🥮",
+  "Dumpling 🥟", "Durazno 🍑", "Ensalada 🥗", "Esencia de mandrágora 🌱", "Espinaca cocida 🍲",
+  "Espuma de mar 🌊", "Estiércol de dragón 🐉💩", "Ex 👅", "Exponme 👀🔮", "Flor de cactus 🌵", "Frutilla 🍓",
+  "Galleta de avena 🍪", "Gelatina de sapo 🐸", "Guisado 🍛", "Guisantes triturados 🫛", "Helado de calabaza 🎃",
+  "Helado de vainilla 🍨", "Hielo 🧊", "Hojas secas 🍁", "Hueso dragón tostado 🦴", "Huevo frito 🍳",
+  "Huevo podrido 🥚", "Jarabe de arce 🍯", "Jugo de pepino 🥒", "Kiwi 🥝", "Leche 🐮", "Leche caducada 🥛",
+  "Leche podrida 🧋", "Lo juro ✋🏻", "Manteca de maní 🥜", "Manteca rancia 🧈", "Margarita 🍸", "Martini 🍸",
+  "Mate 🧉", "Menta 🌿", "Mezcla de hongos 🍄", "Mermelada de escarabajo 🪲", "Moco 🦠", "Naruto 🍥",
+  "Negroni 🥃", "Onigiri 🍙", "Ostras vivas 🦪", "Pan con hongos 🫓", "Papas fritas 🍟", "Pasta de dientes 🪥",
+  "Pasta pegajosa 🍝", "Pastel 🍰", "Pepino 🥒", "Picante 🌶", "Pie de manzana 🥧", "Pimiento asado 🫑",
+  "Piña colada 🍹", "Pizza 🍕", "Pollo asado 🍗", "Polvos mágicos ✨", "Pudín 🍮", "Queso mohoso 🧀",
+  "Redflag 🚩", "Raíz de mandrágora 🌱", "Ron añejo 🍾", "Sal marina 🧂", "Sandía 🍉", "Sangre 🩸",
+  "Sangre de unicornio 🦄", "Sangre de unicornio oxidada 🦄", "Sardinas enlatadas 🐟", "Sexo en la playa 🥃🏖",
+  "Soju 🍶", "Sopa de pescado 🍵", "Sopa de pescado en mal estado 🍵", "Spaguetti 🍝", "Sudor 💦",
+  "Sudor de troll 🧟‍♂💦", "Sushi 🍣", "Tacos 🌮", "Tamal 🫔", "Te negro 🫖🖤", "Tinta de pulpo 🐙",
+  "Trigo seco 🌾", "Tronco podrido 🪵", "Tocino 🥓", "Vino 🍷", "Vómito 🤮", "Waffles 🧇", "Whisky ⁠🥃"
+];
+
+const premios = [
+  "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Detonadores trampa 🪤", "Mapa del merodeador 🗺",
+  "Anillo de Morfín Gaunt 💍", "Varita de saúco 🪄💀", "El desiluminador 💡", "Pergamino mágico 📜",
+  "El traslador 🔮", "Carta vociferadora 💌", "Giratiempo ⏱", "Félix felicis 🍀🧪", "Pluma de Hermione 🪶",
+  "Amortentia 💘🧪", "Pastillas vomitivas 💊", "Ranita Amarilla 💛🍫", "Ranita verde 💚🍫", "Ranita roja ❤🍫",
+  "Ranita negra 🖤🍫", "Ranita rosa 🩷🍫", "Ranita lila 💜🍫", "Ranita naranja 🧡🍫", "Ranita celeste 🩵🍫",
+  "Gragea de todos los sabores 🫘", "Puedes robarle 10.000G en el caldero 🪙", "-10.000G 🪙", "-5.000G 🪙",
+  "-2.000G 🪙", "-500G 🪙", "-1.500G 🪙", "-8.000p", "-7.000p", "+8.000G 🪙", "+5.000G 🪙", "+3.000G 🪙",
+  "+1.500G 🪙", "-10.000p", "+2 ranitas a elección", "Se te restan dos productos de tu inventario (al azar)",
+  "+10.000p", "+8.000p", "+5.000p", "Puedes robarle 10.000p a alguien", "Puedes robarle 8.000p a alguien",
+  "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
+  "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
+  "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
+  "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
+  "La recordadora de Neville 🎱"
+];
+
+document.querySelectorAll('.gragea-container select').forEach(select => {
+  sabores.forEach(sabor => {
+    const option = document.createElement('option');
+    option.value = sabor;
+    option.innerText = sabor;
+    select.appendChild(option);
+  });
+});
+
+function actualizarGrageas() {
+  const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+  const form = document.getElementById('grageasForm');
+  if (isNaN(cuantas)) {
+    form.style.display = 'none';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('resultTitle').style.display = 'none';
+    document.getElementById('msgBox').style.display = 'none';
+    return;
+  } else {
+    form.style.display = 'block';
+  }
+  for (let i = 1; i <= 3; i++) {
+    const box = document.getElementById('gragea-box-' + i);
+    if (i <= cuantas) {
+      box.classList.add('active');
+      box.querySelectorAll('select').forEach(sel => sel.required = true);
+    } else {
+      box.classList.remove('active');
+      box.querySelectorAll('select').forEach(sel => sel.required = false);
     }
+  }
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('resultTitle').style.display = 'none';
+  document.getElementById('msgBox').style.display = 'none';
+}
 
-    const sabores = [
-      "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
-      "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
-      "Biberón 🍼", "Blody Mary 🫗🩸", "Brillo labial 💋💄", "Burrito 🌯", "Cacahuate 🥜", "Caña de azúcar 🎋",
-      "Canela en polvo 🍂", "Cáscara de plátano 🍌", "Café frío ☕", "Café quemado ☕🔥", "Caldo de murciélago 🦇🍲",
-      "Cebolla caramelizada 🧅", "Cereza 🍒", "Cerveza 🍺", "Chicle de menta 🍬", "Chisme express🫦☕",
-      "Chorizo 🥩", "Cítricos 🍋", "Coco 🥥", "Cóctel 🍸", "Coliflor cruda 🥦", "Cera de oído 👂",
-      "Champaña 🥂", "Chocolate 🍫", "Cupcake 🧁", "Donas 🍩", "Drama queen 👑💅🏼", "Dulce de leche 🥮",
-      "Dumpling 🥟", "Durazno 🍑", "Ensalada 🥗", "Esencia de mandrágora 🌱", "Espinaca cocida 🍲",
-      "Espuma de mar 🌊", "Estiércol de dragón 🐉💩", "Ex 👅", "Exponme 👀🔮", "Flor de cactus 🌵", "Frutilla 🍓",
-      "Galleta de avena 🍪", "Gelatina de sapo 🐸", "Guisado 🍛", "Guisantes triturados 🫛", "Helado de calabaza 🎃",
-      "Helado de vainilla 🍨", "Hielo 🧊", "Hojas secas 🍁", "Hueso dragón tostado 🦴", "Huevo frito 🍳",
-      "Huevo podrido 🥚", "Jarabe de arce 🍯", "Jugo de pepino 🥒", "Kiwi 🥝", "Leche 🐮", "Leche caducada 🥛",
-      "Leche podrida 🧋", "Lo juro ✋🏻", "Manteca de maní 🥜", "Manteca rancia 🧈", "Margarita 🍸", "Martini 🍸",
-      "Mate 🧉", "Menta 🌿", "Mezcla de hongos 🍄", "Mermelada de escarabajo 🪲", "Moco 🦠", "Naruto 🍥",
-      "Negroni 🥃", "Onigiri 🍙", "Ostras vivas 🦪", "Pan con hongos 🫓", "Papas fritas 🍟", "Pasta de dientes 🪥",
-      "Pasta pegajosa 🍝", "Pastel 🍰", "Pepino 🥒", "Picante 🌶", "Pie de manzana 🥧", "Pimiento asado 🫑",
-      "Piña colada 🍹", "Pizza 🍕", "Pollo asado 🍗", "Polvos mágicos ✨", "Pudín 🍮", "Queso mohoso 🧀",
-      "Redflag 🚩", "Raíz de mandrágora 🌱", "Ron añejo 🍾", "Sal marina 🧂", "Sandía 🍉", "Sangre 🩸",
-      "Sangre de unicornio 🦄", "Sangre de unicornio oxidada 🦄", "Sardinas enlatadas 🐟", "Sexo en la playa 🥃🏖",
-      "Soju 🍶", "Sopa de pescado 🍵", "Sopa de pescado en mal estado 🍵", "Spaguetti 🍝", "Sudor 💦",
-      "Sudor de troll 🧟‍♂💦", "Sushi 🍣", "Tacos 🌮", "Tamal 🫔", "Te negro 🫖🖤", "Tinta de pulpo 🐙",
-      "Trigo seco 🌾", "Tronco podrido 🪵", "Tocino 🥓", "Vino 🍷", "Vómito 🤮", "Waffles 🧇", "Whisky ⁠🥃"
-    ];
+document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
 
-    const premios = [
-      "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Detonadores trampa 🪤", "Mapa del merodeador 🗺",
-      "Anillo de Morfín Gaunt 💍", "Varita de saúco 🪄💀", "El desiluminador 💡", "Pergamino mágico 📜",
-      "El traslador 🔮", "Carta vociferadora 💌", "Giratiempo ⏱", "Félix felicis 🍀🧪", "Pluma de Hermione 🪶",
-      "Amortentia 💘🧪", "Pastillas vomitivas 💊", "Ranita Amarilla 💛🍫", "Ranita verde 💚🍫", "Ranita roja ❤🍫",
-      "Ranita negra 🖤🍫", "Ranita rosa 🩷🍫", "Ranita lila 💜🍫", "Ranita naranja 🧡🍫", "Ranita celeste 🩵🍫",
-      "Gragea de todos los sabores 🫘", "Puedes robarle 10.000G en el caldero 🪙", "-10.000G 🪙", "-5.000G 🪙",
-      "-2.000G 🪙", "-500G 🪙", "-1.500G 🪙", "-8.000p", "-7.000p", "+8.000G 🪙", "+5.000G 🪙", "+3.000G 🪙",
-      "+1.500G 🪙", "-10.000p", "+2 ranitas a elección", "Se te restan dos productos de tu inventario (al azar)",
-      "+10.000p", "+8.000p", "+5.000p", "Puedes robarle 10.000p a alguien", "Puedes robarle 8.000p a alguien",
-      "Puedes robarle 5.000p a alguien", "Pierdes 3 objetos de tu inventario (al azar)",
-      "Tienes la posibilidad de elegir entre dos cosas ocultas", "Debes donarle 5.000G a alguien 🪙",
-      "Puedes restarle 5.000p a un compañero", "Puedes sumarle 5.000p a un compañero", "+3 ranitas a elección",
-      "Se restan 3 productos a eleccion", "Se restan dos productos a elección", "Espejo de Oesed 🪞",
-      "La recordadora de Neville 🎱"
-    ];
+function premioAleatorio() {
+  return premios[Math.floor(Math.random() * premios.length)];
+}
 
-    // Llena los selects de grageas con la lista de sabores (excepto el selector de cantidad)
-    document.querySelectorAll('.gragea-container select').forEach(select => {
-      sabores.forEach(sabor => {
-        const option = document.createElement('option');
-        option.value = sabor;
-        option.innerText = sabor;
-        select.appendChild(option);
-      });
+document.getElementById('grageasForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+  let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
+  msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
+  let premiosPorGragea = [];
+  for (let i = 1; i <= cuantas; i++) {
+    let trio = [];
+    for (let j = 1; j <= 3; j++) {
+      const sabor = this[`gragea${i}-sabor${j}`].value;
+      const premio = premioAleatorio();
+      trio.push({sabor, premio});
+    }
+    premiosPorGragea.push(trio);
+  }
+  premiosPorGragea.forEach((trio, idx) => {
+    msg += `Gragea ${idx + 1}\n`;
+    trio.forEach(par => {
+      msg += `${extraerEmojis(par.sabor)} ⟶ ${par.premio}\n\n`;
     });
+  });
+  msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
+  document.getElementById('msgContent').innerText = msg;
+  document.getElementById('msgBox').style.display = 'block';
+  let resultado = "";
+  premiosPorGragea.forEach((trio, i) => {
+    resultado += `<strong>Gragea ${i+1}:</strong><br>`;
+    trio.forEach(par => {
+      resultado += `${par.sabor} <br><span class="premio">Premio: ${par.premio}</span><br>`;
+    });
+    resultado += "<br>";
+  });
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = resultado;
+  resultDiv.style.display = 'block';
+  document.getElementById('resultTitle').style.display = 'block';
+  guardarHistorial(premiosPorGragea);
+});
 
-    // Mostrar solo los campos de las grageas elegidas y el formulario después de seleccionar cantidad
-    function actualizarGrageas() {
-      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
-      const form = document.getElementById('grageasForm');
-      if (isNaN(cuantas)) {
-        form.style.display = 'none';
-        document.getElementById('result').style.display = 'none';
-        document.getElementById('resultTitle').style.display = 'none';
-        document.getElementById('msgBox').style.display = 'none';
-        return;
-      } else {
-        form.style.display = 'block';
-      }
-      for (let i = 1; i <= 3; i++) {
-        const box = document.getElementById('gragea-box-' + i);
-        if (i <= cuantas) {
-          box.classList.add('active');
-          box.querySelectorAll('select').forEach(sel => sel.required = true);
-        } else {
-          box.classList.remove('active');
-          box.querySelectorAll('select').forEach(sel => sel.required = false);
-        }
-      }
-      // Limpiar resultado y mensaje bonito al cambiar cantidad
-      document.getElementById('result').style.display = 'none';
-      document.getElementById('resultTitle').style.display = 'none';
-      document.getElementById('msgBox').style.display = 'none';
-    }
+function guardarHistorial(premiosPorGragea) {
+  let historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
+  historial.push({
+    fecha: new Date().toLocaleString(),
+    grageas: premiosPorGragea
+  });
+  localStorage.setItem("historialGrageas", JSON.stringify(historial));
+}
 
-    document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
-
-    // Función para obtener premio aleatorio
-    function premioAleatorio() {
-      return premios[Math.floor(Math.random() * premios.length)];
-    }
-
-    // Al hacer submit, muestra el resultado con premios aleatorios y el mensaje bonito
-    document.getElementById('grageasForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
-
-      // Mensaje bonito
-      let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
-      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
-      let premiosPorGragea = [];
-      for (let i = 1; i <= cuantas; i++) {
-        let trio = [];
-        for (let j = 1; j <= 3; j++) {
-          const sabor = this[`gragea${i}-sabor${j}`].value;
-          const premio = premioAleatorio();
-          trio.push({sabor, premio});
-        }
-        premiosPorGragea.push(trio);
-      }
-      premiosPorGragea.forEach((trio, idx) => {
-        msg += `Gragea ${idx + 1}\n`;
+function mostrarHistorial() {
+  const box = document.getElementById("historialGrageasBox");
+  const historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
+  if (historial.length === 0) {
+    box.innerHTML = "No hay historial aún.";
+  } else {
+    box.innerHTML = historial.map(entry => {
+      let html = `<strong>${entry.fecha}</strong><br>`;
+      entry.grageas.forEach((trio, i) => {
+        html += `<u>Gragea ${i + 1}:</u><br>`;
         trio.forEach(par => {
-          msg += `${extraerEmojis(par.sabor)} ⟶ ${par.premio}\n\n`;
+          html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
         });
       });
-      msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
+      return html + "<br>";
+    }).join('');
+  }
+  box.style.display = 'block';
+}
 
-      document.getElementById('msgContent').innerText = msg;
-      document.getElementById('msgBox').style.display = 'block';
-
-      // Resultados con premios
-      let resultado = "";
-      premiosPorGragea.forEach((trio, i) => {
-        resultado += `<strong>Gragea ${i+1}:</strong><br>`;
-        trio.forEach(par => {
-          resultado += `${par.sabor} <br><span class="premio">Premio: ${par.premio}</span><br>`;
-        });
-        resultado += "<br>";
-      });
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = resultado;
-      resultDiv.style.display = 'block';
-      document.getElementById('resultTitle').style.display = 'block';
+document.getElementById('copyBtn').addEventListener('click', function() {
+  const text = document.getElementById('msgContent').innerText;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      this.innerText = "¡Copiado!";
+      setTimeout(() => { this.innerText = "Copiar"; }, 1200);
     });
+  } else {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    this.innerText = "¡Copiado!";
+    setTimeout(() => { this.innerText = "Copiar"; }, 1200);
+  }
+});
 
- 
-    // Guardar historial en localStorage
-    function guardarHistorial(premiosPorGragea) {
-      let historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
-      historial.push({
-        fecha: new Date().toLocaleString(),
-        grageas: premiosPorGragea
-      });
-      localStorage.setItem("historialGrageas", JSON.stringify(historial));
-    }
+actualizarGrageas();
 
-    // Mostrar historial guardado
-    function mostrarHistorial() {
-      const box = document.getElementById("historialGrageasBox");
-      const historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
-      if (historial.length === 0) {
-        box.innerHTML = "No hay historial aún.";
-      } else {
-        box.innerHTML = historial.map(entry => {
-          let html = `<strong>${entry.fecha}</strong><br>`;
-          entry.grageas.forEach((trio, i) => {
-            html += `<u>Gragea ${i + 1}:</u><br>`;
-            trio.forEach(par => {
-              html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
-            });
-          });
-          return html + "<br>";
-        }).join('');
-      }
-      box.style.display = 'block';
-    } 
-    
-    // Copiar mensaje bonito al portapapeles
-    document.getElementById('copyBtn').addEventListener('click', function() {
-      const text = document.getElementById('msgContent').innerText;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-          this.innerText = "¡Copiado!";
-          setTimeout(() => { this.innerText = "Copiar"; }, 1200);
-        });
-      } else { // fallback
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        this.innerText = "¡Copiado!";
-        setTimeout(() => { this.innerText = "Copiar"; }, 1200);
-      }
-    });
+function titilarVelas() {
+  let l1 = document.getElementById('vela-flama-izq');
+  let l2 = document.getElementById('vela-flama-der');
+  if (!l1 || !l2) return;
+  l1.style.opacity = '0.18';
+  l2.style.opacity = '0.18';
+  setTimeout(() => {
+    l1.style.opacity = '1';
+    l2.style.opacity = '1';
+  }, 3000);
+}
+</script>
 
-    // Inicialmente ocultar el formulario
-    actualizarGrageas();
-
-    // Animación de titileo velas (flama) cada 12s, titila 3s
-    function titilarVelas() {
-      let l1 = document.getElementById('vela-flama-izq');
-      let l2 = document.getElementById('vela-flama-der');
-      if (!l1 || !l2) return;
-      l1.style.opacity = '0.18';
-      l2.style.opacity = '0.18';
-      setTimeout(() => {
-        l1.style.opacity = '1';
-        l2.style.opacity = '1';
-      }, 3000);
-    }
     setInterval(titilarVelas, 12000);
   </script>
 </body>
