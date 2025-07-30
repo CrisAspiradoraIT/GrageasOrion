@@ -285,13 +285,24 @@ const db = firebase.firestore();
     }
 
     // Guardar historial en Firebase
-    function guardarHistorialFirebase(premiosPorGragea) {
-      const coleccion = db.collection('historialGrageas');
-      coleccion.add({
-        fecha: new Date().toISOString(),
-        grageas: premiosPorGragea
-      }).catch(console.error);
-    }
+   function guardarHistorialFirebase(premiosPorGragea) {
+  const coleccion = db.collection('historialGrageas');
+
+  // Aplana la estructura a un solo array de objetos con gragea y sabor/premio
+  const grageasPlanas = premiosPorGragea.flatMap((trio, index) =>
+    trio.map(par => ({
+      gragea: index + 1,
+      sabor: par.sabor,
+      premio: par.premio
+    }))
+  );
+
+  coleccion.add({
+    fecha: new Date().toISOString(),
+    grageas: grageasPlanas
+  }).catch(console.error);
+}
+
 
     // Mostrar historial de Firebase
     function mostrarHistorialFirebase() {
