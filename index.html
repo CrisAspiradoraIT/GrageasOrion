@@ -180,13 +180,7 @@
 
   <script>
     // Configura aquí tu proyecto de Firebase (reemplaza con tus datos reales):
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Inicializar Firebase (usando compat porque cargas firebase-app-compat.js y firebase-firestore-compat.js)
 const firebaseConfig = {
   apiKey: "AIzaSyD5qYlUvFOvLPEswuw0LiE-hLsOdnjoj6Q",
   authDomain: "grageasorion.firebaseapp.com",
@@ -197,9 +191,11 @@ const firebaseConfig = {
   measurementId: "G-TRTB6TKWKV"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+firebase.initializeApp(firebaseConfig);
+
+// Obtener referencia a Firestore
+const db = firebase.firestore();
+
 
     // Lista de sabores
     const sabores = [
