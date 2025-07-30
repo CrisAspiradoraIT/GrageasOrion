@@ -227,6 +227,9 @@
   <div class="result-title" id="resultTitle" style="display:none;">RESULTADOS</div>
   <div class="result" id="result" style="display:none;"></div>
 
+  <button onclick="mostrarHistorial()" style="display:block;margin: 2em auto;">📜 Ver Historial de Grageas</button>
+  <div class="result" id="historialGrageasBox" style="display:none;"></div>
+
   <script>
     // Solo el emoji
     function extraerEmojis(sabor) {
@@ -368,6 +371,38 @@
       document.getElementById('resultTitle').style.display = 'block';
     });
 
+   <script>
+    // Guardar historial en localStorage
+    function guardarHistorial(premiosPorGragea) {
+      let historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
+      historial.push({
+        fecha: new Date().toLocaleString(),
+        grageas: premiosPorGragea
+      });
+      localStorage.setItem("historialGrageas", JSON.stringify(historial));
+    }
+
+    // Mostrar historial guardado
+    function mostrarHistorial() {
+      const box = document.getElementById("historialGrageasBox");
+      const historial = JSON.parse(localStorage.getItem("historialGrageas")) || [];
+      if (historial.length === 0) {
+        box.innerHTML = "No hay historial aún.";
+      } else {
+        box.innerHTML = historial.map(entry => {
+          let html = `<strong>${entry.fecha}</strong><br>`;
+          entry.grageas.forEach((trio, i) => {
+            html += `<u>Gragea ${i + 1}:</u><br>`;
+            trio.forEach(par => {
+              html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
+            });
+          });
+          return html + "<br>";
+        }).join('');
+      }
+      box.style.display = 'block';
+    } 
+    
     // Copiar mensaje bonito al portapapeles
     document.getElementById('copyBtn').addEventListener('click', function() {
       const text = document.getElementById('msgContent').innerText;
