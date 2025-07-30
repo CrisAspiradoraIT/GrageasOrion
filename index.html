@@ -422,6 +422,9 @@ const db = firebase.firestore();
       } else {
         mostrarHistorialFirebase();
         this.textContent = "Cerrar Historial";
+      window.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('grageaCount').value) {
+        actualizarGrageas();
       }
     });
   </script>
