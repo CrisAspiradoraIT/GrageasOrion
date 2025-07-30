@@ -283,9 +283,7 @@ const db = firebase.firestore();
     function premioAleatorio() {
       return premios[Math.floor(Math.random() * premios.length)];
     }
-    function extraerEmojis(texto) {
-      return texto.match(/([\p{Emoji_Presentation}\p{Extended_Pictographic}]+)/gu)?.join('') || texto;
-    }
+
     // Guardar historial en Firebase
    function guardarHistorialFirebase(premiosPorGragea) {
   const coleccion = db.collection('historialGrageas');
@@ -339,38 +337,32 @@ const db = firebase.firestore();
 
     // Copiar texto al portapapeles
     function copiarAlPortapapeles(texto) {
-      navigator.clipboard.writeText(texto).then(() => alert("¡Texto copiado!"), () => alert("No se pudo copiar."));
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("¡Texto copiado!");
+      }, () => {
+        alert("No se pudo copiar el texto.");
+      });
     }
 
+    // Form submit
     document.getElementById('grageasForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const cuantas = parseInt(document.getElementById('grageaCount').value);
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      if (isNaN(cuantas) || cuantas < 1 || cuantas > 3) return;
+
       const premiosPorGragea = [];
-      let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
-      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
-      let html = "";
+      let resultadoTexto = "";
 
       for (let i = 1; i <= cuantas; i++) {
         const trio = [];
-        msg += `Gragea ${i}:\n`;
-        html += `<div><strong>Gragea ${i}:</strong><br>`;
-
         for (let j = 1; j <= 3; j++) {
           const select = this.querySelector(`select[name="gragea${i}-sabor${j}"]`);
           const sabor = select.value;
           const premio = premioAleatorio();
           trio.push({ sabor, premio });
-
-          msg += `${extraerEmojis(sabor)} ⟶ ${premio}\n\n`;
-          html += `${sabor} ⟶ <span class="premio">${premio}</span><br>`;
         }
-
-        msg += "\n";
-        html += '</div><br>';
         premiosPorGragea.push(trio);
       }
-
-      msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
 
       // Mostrar resultados
       resultadoTexto = "";
@@ -414,23 +406,16 @@ const db = firebase.firestore();
     });
 
     // Botón ver historial
-   document.getElementById('verHistorialBtn').addEventListener('click', function() {
-  const box = document.getElementById("historialGrageasBox");
-  if (box.style.display === 'block') {
-    box.style.display = 'none';
-    this.textContent = "📜 Ver Historial de Grageas";
-  } else {
-    mostrarHistorialFirebase();
-    this.textContent = "Cerrar Historial";
-  }
-});
-
-// Mostrar formulario correcto al cargar si ya hay selección
-window.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('grageaCount').value) {
-    actualizarGrageas();
-  }
-});
+    document.getElementById('verHistorialBtn').addEventListener('click', function() {
+      const box = document.getElementById("historialGrageasBox");
+      if (box.style.display === 'block') {
+        box.style.display = 'none';
+        this.textContent = "📜 Ver Historial de Grageas";
+      } else {
+        mostrarHistorialFirebase();
+        this.textContent = "Cerrar Historial";
+      }
+    });
   </script>
 </body>
 </html>
