@@ -414,19 +414,23 @@ const db = firebase.firestore();
     });
 
     // Botón ver historial
-    document.getElementById('verHistorialBtn').addEventListener('click', function() {
-      const box = document.getElementById("historialGrageasBox");
-      if (box.style.display === 'block') {
-        box.style.display = 'none';
-        this.textContent = "📜 Ver Historial de Grageas";
-      } else {
-        mostrarHistorialFirebase();
-        this.textContent = "Cerrar Historial";
-      window.addEventListener('DOMContentLoaded', () => {
-      if (document.getElementById('grageaCount').value) {
-        actualizarGrageas();
-      }
-    });
+   document.getElementById('verHistorialBtn').addEventListener('click', function() {
+  const box = document.getElementById("historialGrageasBox");
+  if (box.style.display === 'block') {
+    box.style.display = 'none';
+    this.textContent = "📜 Ver Historial de Grageas";
+  } else {
+    mostrarHistorialFirebase();
+    this.textContent = "Cerrar Historial";
+  }
+});
+
+// Mostrar formulario correcto al cargar si ya hay selección
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('grageaCount').value) {
+    actualizarGrageas();
+  }
+});
   </script>
 </body>
 </html>
