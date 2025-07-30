@@ -180,17 +180,26 @@
 
   <script>
     // Configura aquí tu proyecto de Firebase (reemplaza con tus datos reales):
-    const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_DOMINIO.firebaseapp.com",
-      projectId: "TU_PROYECTO",
-      storageBucket: "TU_PROYECTO.appspot.com",
-      messagingSenderId: "TU_ID",
-      appId: "TU_APP_ID"
-    };
-    // Inicializa Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD5qYlUvFOvLPEswuw0LiE-hLsOdnjoj6Q",
+  authDomain: "grageasorion.firebaseapp.com",
+  projectId: "grageasorion",
+  storageBucket: "grageasorion.firebasestorage.app",
+  messagingSenderId: "722231330240",
+  appId: "1:722231330240:web:cc34d878ecafab441eb425",
+  measurementId: "G-TRTB6TKWKV"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
     // Lista de sabores
     const sabores = [
