@@ -349,6 +349,10 @@ const db = firebase.firestore();
   });
 }
 
+// Mostrar alerta si el navegador no soporta clipboard moderno
+if (!navigator.clipboard) {
+  alert("Si no puedes copiar el texto, por favor cierra esta pestaña y vuelve a abrir la página.");
+}
 
     // Copiar texto al portapapeles
     function copiarAlPortapapeles(texto) {
