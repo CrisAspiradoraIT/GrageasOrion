@@ -99,11 +99,6 @@
       color: #ffe082;
       font-weight: bold;
     }
-    .premio-bueno {
-      color: #ffd700;
-      font-weight: bold;
-      text-shadow: 0 0 6px #ffef9f;
-    }
     .gragea-selector {
       margin-bottom: 2em;
       font-size: 1.1em;
@@ -167,37 +162,43 @@
     <button type="submit">Abrir Grageas</button>
   </form>
 
+  <!-- Mensaje para copiar -->
   <div class="msg-box" id="msgBox" style="display:none;">
     <button class="copy-btn" id="copyBtn" title="Copiar mensaje">Copiar</button>
     <span id="msgContent"></span>
   </div>
 
+  <!-- Resultados -->
   <div class="result-title" id="resultTitle" style="display:none;">RESULTADOS</div>
   <div class="result" id="result" style="display:none;"></div>
 
   <button id="verHistorialBtn" style="display:block;margin: 2em auto;">📜 Ver Historial de Grageas</button>
   <div class="result" id="historialGrageasBox" style="display:none;"></div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // Config Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyD5qYlUvFOvLPEswuw0LiE-hLsOdnjoj6Q",
-      authDomain: "grageasorion.firebaseapp.com",
-      projectId: "grageasorion",
-      storageBucket: "grageasorion.firebasestorage.app",
-      messagingSenderId: "722231330240",
-      appId: "1:722231330240:web:cc34d878ecafab441eb425",
-      measurementId: "G-TRTB6TKWKV"
-    };
+    // Configura aquí tu proyecto de Firebase (reemplaza con tus datos reales):
+// Inicializar Firebase (usando compat porque cargas firebase-app-compat.js y firebase-firestore-compat.js)
+const firebaseConfig = {
+  apiKey: "AIzaSyD5qYlUvFOvLPEswuw0LiE-hLsOdnjoj6Q",
+  authDomain: "grageasorion.firebaseapp.com",
+  projectId: "grageasorion",
+  storageBucket: "grageasorion.firebasestorage.app",
+  messagingSenderId: "722231330240",
+  appId: "1:722231330240:web:cc34d878ecafab441eb425",
+  measurementId: "G-TRTB6TKWKV"
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
 
-    // Sabores
+// Obtener referencia a Firestore
+const db = firebase.firestore();
+
+
+    // Lista de sabores
     const sabores = [
       "Aceitunas 🫒", "Ajo crudo 🧄", "Alga marina 🪸", "Aliento de dragón 🐉🌬", "Aliento de ogro 🧌",
       "Algodón de azúcar 🍭", "Arándanos 🫐", "Baba de caracol 🐌", "Bellini 🥂", "Beso no correspondido 💋💔",
@@ -240,119 +241,222 @@
       "La recordadora de Neville 🎱"
     ];
 
-    const premiosBuenos = [
-      "Saeta de fuego 🔥🧹", "Nimbus 2000 🪽🧹", "Mapa del merodeador 🗺",
-      "Varita de saúco 🪄💀", "El desiluminador 💡", "Félix felicis 🍀🧪",
-      "Amortentia 💘🧪", "Giratiempo ⏱", "Espejo de Oesed 🪞",
-      "+10.000p", "+8.000p", "+5.000G 🪙", "+8.000G 🪙"
-    ];
-
-    // Llenar selects
+    // Llena selects con sabores
     document.querySelectorAll('.gragea-container select').forEach(select => {
       sabores.forEach(sabor => {
-        const opt = document.createElement('option');
-        opt.value = sabor;
-        opt.textContent = sabor;
-        select.appendChild(opt);
+        const option = document.createElement('option');
+        option.value = sabor;
+        option.innerText = sabor;
+        select.appendChild(option);
       });
     });
 
-    // Mostrar formulario según cantidad
+    // Mostrar formulario según cantidad elegida
     function actualizarGrageas() {
-      const cuantas = parseInt(document.getElementById('grageaCount').value);
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
       const form = document.getElementById('grageasForm');
-      if (isNaN(cuantas)) { form.style.display = 'none'; return; }
-      form.style.display = 'block';
-      for (let i = 1; i <= 3; i++) {
-        const box = document.getElementById(`gragea-box-${i}`);
-        if (i <= cuantas) box.classList.add('active');
-        else box.classList.remove('active');
+      if (isNaN(cuantas)) {
+        form.style.display = 'none';
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('resultTitle').style.display = 'none';
+        document.getElementById('msgBox').style.display = 'none';
+        return;
+      } else {
+        form.style.display = 'block';
       }
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById('gragea-box-' + i);
+        if (i <= cuantas) {
+          box.classList.add('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = true);
+        } else {
+          box.classList.remove('active');
+          box.querySelectorAll('select').forEach(sel => sel.required = false);
+        }
+      }
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('resultTitle').style.display = 'none';
+      document.getElementById('msgBox').style.display = 'none';
     }
     document.getElementById('grageaCount').addEventListener('change', actualizarGrageas);
 
-    // Premio aleatorio modificado
-    function premioAleatorio(sabor) {
-      if (sabor === "Te negro 🫖🖤" || sabor === "Té negro 🫖🖤") {
-        const prob = Math.random();
-        if (prob < 0.65) {
-          return { premio: premiosBuenos[Math.floor(Math.random() * premiosBuenos.length)], bueno: true };
-        }
-      }
-      return { premio: premios[Math.floor(Math.random() * premios.length)], bueno: false };
+    // Premio aleatorio
+    function premioAleatorio() {
+      return premios[Math.floor(Math.random() * premios.length)];
     }
 
-    // Guardar en Firebase
+    // Guardar historial en Firebase
     function guardarHistorialFirebase(premiosPorGragea) {
       const coleccion = db.collection('historialGrageas');
-      const grageasPlanas = premiosPorGragea.flatMap((trio, i) =>
-        trio.map(p => ({ gragea: i + 1, sabor: p.sabor, premio: p.premio }))
+
+      // Aplana la estructura a un solo array de objetos con gragea y sabor/premio
+      const grageasPlanas = premiosPorGragea.flatMap((trio, index) =>
+        trio.map(par => ({
+          gragea: index + 1,
+          sabor: par.sabor,
+          premio: par.premio
+        }))
       );
-      coleccion.add({ fecha: new Date(), grageas: grageasPlanas });
+
+      coleccion.add({
+        fecha: new Date().toISOString(),
+        grageas: grageasPlanas
+      }).catch(console.error);
     }
 
-    // Mostrar mensaje y resultado
-    document.getElementById('grageasForm').addEventListener('submit', async e => {
+    // Mostrar historial de Firebase
+   function mostrarHistorialFirebase() {
+  const box = document.getElementById("historialGrageasBox");
+  box.innerHTML = "Cargando historial...";
+  const coleccion = db.collection('historialGrageas').orderBy('fecha', 'desc').limit(20);
+
+  coleccion.get().then(snapshot => {
+    if (snapshot.empty) {
+      box.innerHTML = "No hay historial aún.";
+      box.style.display = 'block';
+      return;
+    }
+
+    let html = '';
+    snapshot.forEach(doc => {
+      const entry = doc.data();
+      html += `<strong>${new Date(entry.fecha).toLocaleString()}</strong><br>`;
+
+      // Agrupar por gragea
+      const grageasAgrupadas = {};
+      entry.grageas.forEach(par => {
+        if (!grageasAgrupadas[par.gragea]) {
+          grageasAgrupadas[par.gragea] = [];
+        }
+        grageasAgrupadas[par.gragea].push(par);
+      });
+
+      Object.entries(grageasAgrupadas).forEach(([num, trio]) => {
+        html += `<u>Gragea ${num}:</u><br>`;
+        trio.forEach(par => {
+          html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
+        });
+      });
+
+      html += '<hr style="border-color:#ffe08277">';
+    });
+
+    box.innerHTML = html;
+    box.style.display = 'block';
+  }).catch(error => {
+    console.error(error);
+    box.innerHTML = "Error al cargar historial.";
+  });
+}
+
+// Mostrar alerta si el navegador no soporta clipboard moderno
+if (!navigator.clipboard) {
+  alert("Si no puedes copiar el texto, por favor cierra esta pestaña y vuelve a abrir la página.");
+}
+
+    // Copiar texto al portapapeles
+    function copiarAlPortapapeles(texto) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(() => {
+      alert("¡Texto copiado!");
+    }).catch(err => {
+      console.error("Error al copiar: ", err);
+      fallbackCopy(texto);
+    });
+  } else {
+    fallbackCopy(texto);
+  }
+}
+
+function fallbackCopy(texto) {
+  const textarea = document.createElement('textarea');
+  textarea.value = texto;
+  textarea.style.position = 'fixed';
+  textarea.style.top = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    alert("¡Texto copiado!");
+  } catch (err) {
+    alert("No se pudo copiar el texto.");
+  }
+  document.body.removeChild(textarea);
+}
+
+
+    // Form submit
+    document.getElementById('grageasForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const cuantas = parseInt(document.getElementById('grageaCount').value);
+      const cuantas = parseInt(document.getElementById('grageaCount').value, 10);
+      if (isNaN(cuantas) || cuantas < 1 || cuantas > 3) return;
+
+      // Mensaje bonito
+      let msg = "⋆ ————————✧◦🍻◦✧———————— ⋆\n\n";
+      msg += "╰┈➤ ɢʀᴀɢᴇᴀ ᴅᴇ ᴛᴏᴅᴏꜱ ʟᴏꜱ ꜱᴀʙᴏʀᴇꜱ 🫘\n\n";
       const premiosPorGragea = [];
-
-      let mensaje = "✨ Apertura de Grageas ✨\n\n";
+      
       for (let i = 1; i <= cuantas; i++) {
-        const saboresSeleccionados = [
-          e.target[`gragea${i}-sabor1`].value,
-          e.target[`gragea${i}-sabor2`].value,
-          e.target[`gragea${i}-sabor3`].value
-        ];
-        const premiosActuales = saboresSeleccionados.map(sabor => {
-          const { premio, bueno } = premioAleatorio(sabor);
-          return { sabor, premio, bueno };
-        });
-        premiosPorGragea.push(premiosActuales);
-
-        mensaje += `🪄 Gragea ${i}:\n`;
-        premiosActuales.forEach(p => {
-          mensaje += `🍬 ${p.sabor} → ${p.bueno ? '🎉' : ''}${p.premio}${p.bueno ? ' 🎉' : ''}\n`;
-        });
-        mensaje += '\n';
+        const trio = [];
+        for (let j = 1; j <= 3; j++) {
+          const select = this.querySelector(`select[name="gragea${i}-sabor${j}"]`);
+          const sabor = select.value;
+          const premio = premioAleatorio();
+          trio.push({ sabor, premio });
+        }
+        premiosPorGragea.push(trio);
       }
 
-      document.getElementById('msgContent').textContent = mensaje;
-      document.getElementById('msgBox').style.display = 'block';
-      document.getElementById('result').innerHTML = premiosPorGragea.map(
-        (trio, i) => `
-          <p><strong>Gragea ${i + 1}</strong></p>
-          <ul>
-            ${trio.map(p =>
-              `<li>${p.sabor} → <span class="${p.bueno ? 'premio-bueno' : 'premio'}">${p.premio}</span></li>`
-            ).join('')}
-          </ul>`
-      ).join('');
-      document.getElementById('result').style.display = 'block';
-      document.getElementById('resultTitle').style.display = 'block';
+      premiosPorGragea.forEach((trio, idx) => {
+        msg += `Gragea ${idx + 1}\n`;
+        trio.forEach(par => {
+          msg += `${par.sabor} ⟶ ${par.premio}\n\n`;
+        });
+      });
+      msg += "⋆ ————————✧◦🍻◦✧———————— ⋆";
+
+      // Mostrar mensaje con botón para copiar
+      const msgBox = document.getElementById('msgBox');
+      const msgContent = document.getElementById('msgContent');
+      msgContent.textContent = msg.trim();
+      msgBox.style.display = 'block';
+
+      // Mostrar resultados en la página
+      const resultBox = document.getElementById('result');
+      const resultTitle = document.getElementById('resultTitle');
+      let html = '';
+      premiosPorGragea.forEach((trio, i) => {
+        html += `<div><strong>Gragea ${i + 1}:</strong><br>`;
+        trio.forEach(par => {
+          html += `${par.sabor} ⟶ <span class="premio">${par.premio}</span><br>`;
+        });
+        html += '</div><br>';
+      });
+      resultBox.innerHTML = html;
+      resultBox.style.display = 'block';
+      resultTitle.style.display = 'block';
+
+      // Guardar en Firebase
       guardarHistorialFirebase(premiosPorGragea);
     });
 
-    // Copiar mensaje
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      navigator.clipboard.writeText(document.getElementById('msgContent').textContent);
-      alert('Mensaje copiado al portapapeles 📋');
+    // Botón copiar mensaje
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      const texto = document.getElementById('msgContent').textContent;
+      copiarAlPortapapeles(texto);
     });
 
-    // Historial Firebase
-    document.getElementById('verHistorialBtn').addEventListener('click', async () => {
-      const box = document.getElementById('historialGrageasBox');
-      const snap = await db.collection('historialGrageas').orderBy('fecha', 'desc').limit(10).get();
-      if (snap.empty) { box.textContent = 'No hay historial registrado.'; }
-      else {
-        box.innerHTML = snap.docs.map(doc => {
-          const d = doc.data();
-          const fecha = d.fecha.toDate().toLocaleString();
-          return `<p><strong>${fecha}</strong></p>` +
-            d.grageas.map(g => `${g.gragea}. ${g.sabor} → ${g.premio}`).join('<br>') + '<hr>';
-        }).join('');
+    // Botón ver historial
+    document.getElementById('verHistorialBtn').addEventListener('click', function() {
+      const box = document.getElementById("historialGrageasBox");
+      if (box.style.display === 'block') {
+        box.style.display = 'none';
+        this.textContent = "📜 Ver Historial de Grageas";
+      } else {
+        mostrarHistorialFirebase();
+        this.textContent = "Cerrar Historial";
       }
-      box.style.display = 'block';
     });
   </script>
 </body>
